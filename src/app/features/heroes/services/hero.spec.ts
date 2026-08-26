@@ -6,29 +6,13 @@ import { Hero } from '../models/hero.model';
 import { provideHttpClient } from '@angular/common/http';
 import { API_URL } from '../../../core/config/api.token';
 import { firstValueFrom } from 'rxjs';
+import { HEROES_MOCK } from '../testing/hero-list.mock';
 
 describe('Hero', () => {
   let service: HeroService;
   let httpTesting: HttpTestingController;
 
   const apiUrl = 'https://test-api';
-
-  const heroes: Hero[] = [
-    {
-      id: 1,
-      name: 'Spider-Man',
-      realName: 'Peter Benjamin Parker',
-      link: 'https://www.marvel.com/characters/spider-man-peter-parker',
-      imgUrl: 'http://marvel.com/characters/54/spider-man',
-    },
-    {
-      id: 2,
-      name: 'CAPTAIN MARVEL',
-      realName: 'Carol Danvers',
-      link: 'https://www.marvel.com/characters/captain-marvel-carol-danvers',
-      imgUrl: 'http://marvel.com/characters/9/captain_marvel',
-    },
-  ];
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -53,9 +37,9 @@ describe('Hero', () => {
       const request = httpTesting.expectOne(`${apiUrl}/heroes`);
 
       expect(request.request.method).toBe('GET');
-      request.flush(heroes);
+      request.flush(HEROES_MOCK);
 
-      await expect(result).resolves.toEqual(heroes);
+      await expect(result).resolves.toEqual(HEROES_MOCK);
       httpTesting.verify();
     });
   });

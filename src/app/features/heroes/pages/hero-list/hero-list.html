@@ -1,1 +1,31 @@
-<p>hero-list works!</p>
+<section>
+  <h1>Heroes</h1>
+
+  <mat-form-field appearance="outline">
+    <mat-label>Buscar heroes</mat-label>
+    <input
+      matInput
+      type="search"
+      placeholder="Buscar"
+      [value]="query()"
+      (input)="onSearch($event)"
+    />
+  </mat-form-field>
+
+  @if (loading()) {
+    <p>Cargando heroes...</p>
+  } @else if (error()) {
+    <p>{{ error() }}</p>
+  } @else if (heores().length === 0) {
+    <p>No se encontraron heroes.</p>
+  } @else {
+    <p>{{ totalHeroes() }} heroes encontrados.</p>
+    @for (hero of pagedHeroes(); track hero.id) {
+      <app-hero-card
+        [hero]="hero"
+        (editRequested)="onEditRequested($event)"
+        (deleteRequested)="onDeleteRequested($event)"
+      ></app-hero-card>
+    }
+  }
+</section>

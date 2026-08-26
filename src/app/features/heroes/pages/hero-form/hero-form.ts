@@ -54,6 +54,7 @@ export class HeroForm {
     const id = this.id();
     if (id) {
       this.facade.update(Number(id), this.createNewHero());
+      return;
     }
 
     this.facade.create(this.createNewHero());

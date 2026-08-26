@@ -26,4 +26,8 @@ export class HeroService {
   update(id: string, updatedHero: UpdateHero): Observable<Hero> {
     return this.httpClient.patch<Hero>(`${this.apiUrl}/${id}`, updatedHero);
   }
+
+  delete(id: string): Observable<void> {
+    return this.httpClient.delete<void>(`${this.apiUrl}/${id}`);
+  }
 }

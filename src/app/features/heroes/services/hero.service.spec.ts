@@ -155,4 +155,30 @@ describe('Hero', () => {
       });
     });
   });
+
+  describe('delete', () => {
+    it('should delete a hero', async () => {
+      const resultPromise = firstValueFrom(service.delete(HEROES_MOCK[0].id));
+      const request = httpTesting.expectOne(`${apiUrl}/heroes/${HEROES_MOCK[0].id}`);
+
+      expect(request.request.method).toBe('DELETE');
+      request.flush(null);
+
+      await expect(resultPromise).resolves.toBeNull();
+    });
+
+    it('should propagate an error when deleting a hero fails', async () => {
+      const resultPromise = firstValueFrom(service.delete(999));
+      const request = httpTesting.expectOne(`${apiUrl}/heroes/999`);
+
+      request.flush('Fallo al eliminar el heroe', {
+        status: 404,
+        statusText: 'Not Found',
+      });
+
+      await expect(resultPromise).rejects.toMatchObject({
+        status: 404,
+      });
+    });
+  });
 });

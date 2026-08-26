@@ -4,5 +4,4 @@ export interface Hero {
   realName: string;
   link: string;
   imgUrl?: string;
-  size?: number;
 }

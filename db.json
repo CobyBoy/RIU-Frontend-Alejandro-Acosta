@@ -6,72 +6,63 @@
             "name": "Spider-Man",
             "realName": "Peter Benjamin Parker",
             "link": "https://www.marvel.com/characters/spider-man-peter-parker",
-            "imgUrl": "https://cdn.marvel.com/content/2x/005smp_ons_cut_dsk_01_5.webp",
-            "size": 40000
+            "imgUrl": "https://cdn.marvel.com/content/2x/005smp_ons_cut_dsk_01_5.webp"
         },
         {
             "id": 2,
             "name": "CAPTAIN MARVEL",
             "realName": "Carol Danvers",
             "link": "https://www.marvel.com/characters/captain-marvel-carol-danvers",
-            "imgUrl": "https://cdn.marvel.com/content/2x/008cmv_ons_cut_dsk_03_0.webp",
-            "size": 40000
+            "imgUrl": "https://cdn.marvel.com/content/2x/008cmv_ons_cut_dsk_03_0.webp"
         },
         {
             "id": 3,
             "name": "HULK",
             "realName": "Robert Bruce Banner",
             "link": "https://www.marvel.com/characters/hulk-bruce-banner",
-            "imgUrl": "https://cdn.marvel.com/content/2x/006hbb_ons_cut_dsk_01_2.webp",
-            "size": 40000
+            "imgUrl": "https://cdn.marvel.com/content/2x/006hbb_ons_cut_dsk_01_2.webp"
         },
         {
             "id": 4,
             "name": "Black Widow",
             "realName": "Natalia 'Natasha' Alianovna Romanova",
             "link": "https://www.marvel.com/characters/black-widow-natasha-romanoff",
-            "imgUrl": "https://cdn.marvel.com/content/2x/011blw_ons_cut_dsk_03.webp",
-            "size": 40000
+            "imgUrl": "https://cdn.marvel.com/content/2x/011blw_ons_cut_dsk_03.webp"
         },
         {
             "id": 5,
             "name": "Daredevil",
             "realName": "Matthew Michael Murdock",
             "link": "https://www.marvel.com/characters/daredevil-matthew-murdock",
-            "imgUrl": "https://cdn.marvel.com/content/2x/026ddm_ons_cut_dsk_02.webp",
-            "size": 40000
+            "imgUrl": "https://cdn.marvel.com/content/2x/026ddm_ons_cut_dsk_02.webp"
         },
         {
             "id": 6,
             "name": "Wolverine",
             "realName": "James Howlett",
             "link": "https://www.marvel.com/characters/wolverine-logan",
-            "imgUrl": "https://cdn.marvel.com/content/2x/034wlv_com_character_imgUrlonleftdesktop.webp",
-            "size": 40000
+            "imgUrl": "https://cdn.marvel.com/content/2x/034wlv_com_character_imgUrlonleftdesktop.webp"
         },
         {
             "id": 7,
             "name": "Captain America",
             "realName": "Steven Rogers",
             "link": "https://www.marvel.com/characters/captain-america-steve-rogers",
-            "imgUrl": "https://cdn.marvel.com/content/2x/003cap_ons_cut_dsk_01_1.webp",
-            "size": 40000
+            "imgUrl": "https://cdn.marvel.com/content/2x/003cap_ons_cut_dsk_01_1.webp"
         },
         {
             "id": 8,
             "name": "Iron Man",
             "realName": "Anthony Edward 'Tony' Stark",
             "link": "https://www.marvel.com/characters/iron-man-tony-stark",
-            "imgUrl": "https://cdn.marvel.com/content/2x/002irm_ons_cut_dsk_01_1.webp",
-            "size": 40000
+            "imgUrl": "https://cdn.marvel.com/content/2x/002irm_ons_cut_dsk_01_1.webp"
         },
         {
             "id": 9,
             "name": "THOR",
             "realName": "Thor Odinson",
             "link": "https://www.marvel.com/characters/thor-thor-odinson",
-            "imgUrl": "https://cdn.marvel.com/content/2x/004tho_ons_cut_dsk_01_3.webp",
-            "size": 40000
+            "imgUrl": "https://cdn.marvel.com/content/2x/004tho_ons_cut_dsk_01_3.webp"
         }
     ]
 }

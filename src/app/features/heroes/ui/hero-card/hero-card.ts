@@ -12,7 +12,7 @@ import { Hero } from '../../models/hero.model';
 })
 export class HeroCard {
   readonly hero = input.required<Hero>();
-  readonly editRequested = output<number>();
+  readonly editRequested = output<string>();
   readonly deleteRequested = output<Hero>();
 
   onEdit(): void {

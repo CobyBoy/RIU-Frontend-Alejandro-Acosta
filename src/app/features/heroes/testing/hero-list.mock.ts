@@ -2,14 +2,14 @@ import { Hero } from "../models/hero.model";
 
 export const HEROES_MOCK: Hero[] = [
     {
-      id: 1,
+      id: "1",
       name: 'Spider-Man',
       realName: 'Peter Benjamin Parker',
       link: 'https://www.marvel.com/characters/spider-man-peter-parker',
       imageUrl: 'http://marvel.com/characters/54/spider-man',
     },
     {
-      id: 2,
+      id: "2",
       name: 'Captain Marvel',
       realName: 'Carol Danvers',
       link: 'https://www.marvel.com/characters/captain-marvel-carol-danvers',

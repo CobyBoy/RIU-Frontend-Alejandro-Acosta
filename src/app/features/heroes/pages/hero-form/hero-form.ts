@@ -30,7 +30,7 @@ export class HeroForm {
     effect(() => {
       const id = this.id();
       if (!id) return;
-      this.facade.load(Number(id));
+      this.facade.load(id);
     });
 
     effect(() => {
@@ -53,7 +53,7 @@ export class HeroForm {
 
     const id = this.id();
     if (id) {
-      this.facade.update(Number(id), this.createNewHero());
+      this.facade.update(id, this.createNewHero());
       return;
     }
 

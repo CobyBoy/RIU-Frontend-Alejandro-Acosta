@@ -32,7 +32,7 @@ export class HeroFormFacade {
       });
   }
 
-  load(id: number): void {
+  load(id: string): void {
     this.loading.set(true);
     this.error.set(null);
 
@@ -49,7 +49,7 @@ export class HeroFormFacade {
       });
   }
 
-  update(id: number, changes: UpdateHero): void {
+  update(id: string, changes: UpdateHero): void {
     this.submitting.set(true);
     this.error.set(null);
 

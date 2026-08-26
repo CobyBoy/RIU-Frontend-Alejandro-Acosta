@@ -1,4 +1,4 @@
-<mat-card class="h-full overflow-hidden ">
+<mat-card class="h-full overflow-hidden">
   <div class="h-52 overflow-hidden aspect-4/5">
     <img
       class="h-52 w-full object-contain object-center"
@@ -10,7 +10,7 @@
 
   <mat-card-content class="space-y-1 pt-4">
     <h2 class="text-lg font-semibold">
-      {{ hero().name }}
+      <a [href]="hero().link" target="_blank" rel="noopener">{{ hero().name }}</a>
     </h2>
 
     <p class="text-sm text-gray-600">
@@ -19,12 +19,8 @@
   </mat-card-content>
 
   <mat-card-actions align="end">
-    <button matButton type="button" (click)="onEdit()">
-      Editar
-    </button>
+    <button matButton type="button" (click)="onEdit()">Editar</button>
 
-    <button matButton type="button" (click)="onDelete()">
-      Eliminar
-    </button>
+    <button matButton type="button" (click)="onDelete()">Eliminar</button>
   </mat-card-actions>
 </mat-card>

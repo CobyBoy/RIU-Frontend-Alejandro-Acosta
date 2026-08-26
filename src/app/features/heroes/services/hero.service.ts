@@ -15,7 +15,7 @@ export class HeroService {
     return this.httpClient.get<Hero[]>(this.apiUrl);
   }
 
-  getById(id: number): Observable<Hero> {
+  getById(id: string): Observable<Hero> {
     return this.httpClient.get<Hero>(`${this.apiUrl}/${id}`);
   }
 
@@ -23,7 +23,7 @@ export class HeroService {
     return this.httpClient.post<Hero>(`${this.apiUrl}`, hero);
   }
 
-  update(id: number, updatedHero: UpdateHero): Observable<Hero> {
+  update(id: string, updatedHero: UpdateHero): Observable<Hero> {
     return this.httpClient.patch<Hero>(`${this.apiUrl}/${id}`, updatedHero);
   }
 }

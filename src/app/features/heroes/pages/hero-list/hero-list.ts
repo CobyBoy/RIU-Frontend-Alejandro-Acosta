@@ -1,7 +1,20 @@
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { HeroService } from '../../services/hero.service';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
-import { catchError, filter, finalize, map, of, startWith, switchMap } from 'rxjs';
+import {
+  catchError,
+  combineLatest,
+  debounce,
+  distinctUntilChanged,
+  filter,
+  finalize,
+  map,
+  Observable,
+  of,
+  startWith,
+  switchMap,
+  timer,
+} from 'rxjs';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { HeroCard } from '../../ui/hero-card/hero-card';
@@ -34,6 +47,7 @@ export class HeroList {
   readonly query = signal('');
   readonly page = signal(0);
   readonly pageSize = 5;
+
   readonly pagedHeroes = computed(() => {
     const start = this.page() * this.pageSize;
     const end = start + this.pageSize;
@@ -46,18 +60,22 @@ export class HeroList {
 
   readonly totalHeroes = computed(() => this.heores().length);
   readonly refresh = signal(false);
+
   readonly deleting = signal(false);
   readonly deleteError = signal<string | null>(null);
 
+  private readonly refresh$ = toObservable(this.refresh);
+  private readonly query$ = toObservable(this.query).pipe(
+    map((query) => query.trim()),
+    distinctUntilChanged(),
+    debounce((query) => (query ? timer(300) : of(0))),
+  );
+
   private readonly state = toSignal(
-    toObservable(this.refresh).pipe(
-      switchMap(() =>
-        this.heroService.getAllHeroes().pipe(
-          map((heroes) => ({ heroes, loading: false, error: null })),
-          startWith({ heroes: [], loading: true, error: null }),
-          catchError(() =>
-            of({ heroes: [], loading: false, error: 'No se pudieron cargar los heroes.' }),
-          ),
+    combineLatest([this.query$, this.refresh$]).pipe(
+      switchMap(([query]) =>
+        this.loadHeroes(
+          query ? this.heroService.searchByName(query) : this.heroService.getAllHeroes(),
         ),
       ),
     ),
@@ -70,8 +88,19 @@ export class HeroList {
     },
   );
 
+  private loadHeroes(request$: Observable<Hero[]>): Observable<{ heroes: Hero[]; loading: boolean; error: string | null }> {
+    return request$.pipe(
+      map((heroes) => ({ heroes, loading: false, error: null })),
+      startWith({ heroes: [], loading: true, error: null }),
+      catchError(() =>
+        of({ heroes: [], loading: false, error: 'No se pudieron cargar los heroes.' }),
+      )
+    );
+  }
+
   onSearch(event: Event): void {
     const input = event.target as HTMLInputElement;
+    this.page.set(0);
     this.query.set(input.value);
   }
 

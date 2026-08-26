@@ -63,11 +63,11 @@
       }
 
       <div class="flex justify-end gap-3">
-        <button matButton type="button" [disabled]="facade.submitting()" (click)="onCancel()">
+        <button matButton type="button" [attr.aria-disabled]="facade.submitting()" (click)="onCancel()">
           Cancelar
         </button>
 
-        <button matButton="filled" type="submit">
+        <button matButton="filled" type="submit" [attr.aria-disabled]="facade.submitting() || form.invalid">
           {{ facade.submitting() ? 'Guardando...' : 'Guardar' }}
         </button>
       </div>

@@ -189,7 +189,7 @@ describe('HeroForm', () => {
       fixture.componentRef.setInput('id', '1');
       fixture.detectChanges();
 
-      expect(loadMock).toHaveBeenCalledExactlyOnceWith(1);
+      expect(loadMock).toHaveBeenCalledExactlyOnceWith("1");
     });
 
     it('should populate the form when a hero is loaded in edit mode', () => {
@@ -237,7 +237,7 @@ describe('HeroForm', () => {
 
       component.onSubmit();
 
-      expect(updateMock).toHaveBeenCalledExactlyOnceWith(1, {
+      expect(updateMock).toHaveBeenCalledExactlyOnceWith("1", {
         name: 'Spider-Man',
         realName: 'Peter Parker',
         imageUrl: '/images/spider-man.jpg',

@@ -181,7 +181,7 @@ describe('HeroFormFacade', () => {
 
       facade.update("1", changes);
 
-      expect(updateMock).toHaveBeenCalledExactlyOnceWith(1, changes);
+      expect(updateMock).toHaveBeenCalledExactlyOnceWith("1", changes);
       expect(facade.submitting()).toBe(true);
       expect(facade.error()).toBeNull();
     });

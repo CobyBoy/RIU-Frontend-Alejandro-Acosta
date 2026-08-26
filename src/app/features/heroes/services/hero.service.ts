@@ -14,4 +14,8 @@ export class HeroService {
   getAllHeroes(): Observable<Hero[]> {
     return this.httpClient.get<Hero[]>(this.apiUrl);
   }
+
+  getById(id: number): Observable<Hero> {
+    return this.httpClient.get<Hero>(`${this.apiUrl}/${id}`);
+  }
 }

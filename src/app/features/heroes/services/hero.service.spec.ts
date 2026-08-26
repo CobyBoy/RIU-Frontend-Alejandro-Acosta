@@ -42,5 +42,29 @@ describe('Hero', () => {
       await expect(result).resolves.toEqual(HEROES_MOCK);
       httpTesting.verify();
     });
+
+    it('should request a hero by id', async () => {
+      const hero = HEROES_MOCK[0];
+      const resultPromise = firstValueFrom(service.getById(hero.id));
+      const request = httpTesting.expectOne(`${apiUrl}/heroes/${hero.id}`);
+
+      expect(request.request.method).toBe('GET');
+      request.flush(hero);
+      await expect(resultPromise).resolves.toEqual(hero);
+    });
+
+    it('should propagate a not found error', async () => {
+      const resultPromise = firstValueFrom(service.getById(999));
+      const request = httpTesting.expectOne(`${apiUrl}/heroes/999`);
+
+      request.flush('Heroe no encontrado', {
+        status: 404,
+        statusText: 'Not Found',
+      });
+
+      await expect(resultPromise).rejects.toMatchObject({
+        status: 404,
+      });
+    });
   });
 });

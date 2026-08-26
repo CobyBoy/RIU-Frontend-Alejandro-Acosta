@@ -21,6 +21,7 @@ describe('HeroList', () => {
   const deleteMock = vi.fn();
   const openDialogMock = vi.fn();
   const getAllHeroesMock = vi.fn();
+  const searchByNameMock = vi.fn();
 
   beforeEach(async () => {
     heroesSubject = new Subject<Hero[]>();
@@ -38,6 +39,9 @@ describe('HeroList', () => {
     getAllHeroesMock.mockReturnValue(heroesSubject.asObservable());
     deleteMock.mockReturnValue(deleteSubject.asObservable());
 
+    searchByNameMock.mockReset();
+    searchByNameMock.mockReturnValue(heroesSubject.asObservable());
+
     await TestBed.configureTestingModule({
       imports: [HeroList],
       providers: [
@@ -47,6 +51,7 @@ describe('HeroList', () => {
           useValue: {
             getAllHeroes: getAllHeroesMock,
             delete: deleteMock,
+            searchByName: searchByNameMock,
           },
         },
         {
@@ -175,6 +180,8 @@ describe('HeroList', () => {
 
       deleteMock.mockReturnValue(deleteSubject.asObservable());
 
+      const callsBeforeDelete = getAllHeroesMock.mock.calls.length;
+
       component.onDeleteRequested(hero);
       dialogResultSubject.next(true);
 
@@ -183,7 +190,7 @@ describe('HeroList', () => {
 
       fixture.detectChanges();
 
-      expect(getAllHeroesMock).toHaveBeenCalledTimes(2);
+      expect(getAllHeroesMock).toHaveBeenCalledTimes(callsBeforeDelete + 1);
     });
 
     it('should show an error when delete fails', () => {
@@ -225,6 +232,89 @@ describe('HeroList', () => {
       dialogResultSubject.next(true);
 
       expect(component.deleteError()).toBeNull();
+    });
+  });
+
+  describe('search', () => {
+    afterEach(() => {
+      vi.clearAllTimers();
+      vi.useRealTimers();
+    });
+
+    it('should search heroes after the debounce time', async () => {
+      vi.useFakeTimers();
+
+      const input = fixture.nativeElement.querySelector('input[type="search"]') as HTMLInputElement;
+
+      input.value = 'man';
+      input.dispatchEvent(new Event('input'));
+
+      fixture.detectChanges();
+
+      expect(searchByNameMock).not.toHaveBeenCalled();
+      await vi.advanceTimersByTimeAsync(300);
+      expect(searchByNameMock).toHaveBeenCalledExactlyOnceWith('man');
+
+      vi.useRealTimers();
+    });
+
+    it('should debounce search changes', async () => {
+      vi.useFakeTimers();
+
+      const input = fixture.nativeElement.querySelector('input[type="search"]') as HTMLInputElement;
+
+      input.value = 'm';
+      input.dispatchEvent(new Event('input'));
+      await vi.advanceTimersByTimeAsync(100);
+
+      input.value = 'ma';
+      input.dispatchEvent(new Event('input'));
+      await vi.advanceTimersByTimeAsync(100);
+
+      input.value = 'man';
+      input.dispatchEvent(new Event('input'));
+      await vi.advanceTimersByTimeAsync(299);
+
+      expect(searchByNameMock).not.toHaveBeenCalledOnce();
+      await vi.advanceTimersByTimeAsync(1);
+      expect(searchByNameMock).toHaveBeenCalledExactlyOnceWith('man');
+    });
+
+    it('should trim the search query', async () => {
+      vi.useFakeTimers();
+
+      const input = fixture.nativeElement.querySelector('input[type="search"]') as HTMLInputElement;
+
+      input.value = '  man  ';
+      input.dispatchEvent(new Event('input'));
+
+      await vi.advanceTimersByTimeAsync(300);
+
+      expect(searchByNameMock).toHaveBeenCalledExactlyOnceWith('man');
+    });
+
+    it('should reload all heroes after search is cleared', async () => {
+      vi.useFakeTimers();
+
+      const input = fixture.nativeElement.querySelector('input[type="search"]') as HTMLInputElement;
+
+      input.value = '  man  ';
+      input.dispatchEvent(new Event('input'));
+
+      await vi.advanceTimersByTimeAsync(300);
+
+      expect(searchByNameMock).toHaveBeenCalledExactlyOnceWith('man');
+    });
+
+    it('should reset the current page when searching', () => {
+      component.page.set(2);
+
+      const input = fixture.nativeElement.querySelector('input[type="search"]') as HTMLInputElement;
+
+      input.value = 'man';
+      input.dispatchEvent(new Event('input'));
+
+      expect(component.page()).toBe(0);
     });
   });
 });

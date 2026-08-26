@@ -76,6 +76,34 @@
       "link": "",
       "imageUrl": "https://cdn.marvel.com/content/2x/042wmr_ons_cut_dsk_01_1.webp",
       "id": "NYlHjT29oy0"
+    },
+    {
+      "name": "Spider-Man",
+      "realName": "Peter Parker",
+      "link": "https://www.marvel.com/characters/spider-man-peter-parker",
+      "imageUrl": "https://cdn.marvel.com/content/2x/005smp_ons_cut_dsk_01_5.webp",
+      "id": "QBIizG5rNNk"
+    },
+    {
+      "name": "Spider-Man",
+      "realName": "Peter Benjamin Parker",
+      "link": "https://www.marvel.com/characters/spider-man-peter-parker",
+      "imageUrl": "https://cdn.marvel.com/content/2x/005smp_ons_cut_dsk_01_5.webp",
+      "id": "TcEVrkuv4BY"
+    },
+    {
+      "name": "Spider-Man",
+      "realName": "Peter Parker",
+      "link": "https://www.marvel.com/characters/spider-man-peter-parker",
+      "imageUrl": "https://cdn.marvel.com/content/2x/005smp_ons_cut_dsk_01_5.webp",
+      "id": "UoXDYeMHcJc"
+    },
+    {
+      "name": "Spider-Man",
+      "realName": "Peter Benjamin Parker",
+      "link": "https://www.marvel.com/characters/spider-man-peter-parker",
+      "imageUrl": "https://cdn.marvel.com/content/2x/005smp_ons_cut_dsk_01_5.webp",
+      "id": "CajFSGDmU6g"
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"

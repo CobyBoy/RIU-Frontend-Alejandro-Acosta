@@ -7,3 +7,4 @@ export interface Hero {
 }
 
 export type CreateHero = Omit<Hero, 'id'>;
+export type UpdateHero = Partial<Hero>;

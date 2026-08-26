@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { HeroService } from './hero.service';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
-import { CreateHero, Hero } from '../models/hero.model';
+import { CreateHero, Hero, UpdateHero } from '../models/hero.model';
 import { provideHttpClient } from '@angular/common/http';
 import { API_URL } from '../../../core/config/api.token';
 import { firstValueFrom } from 'rxjs';
@@ -109,6 +109,49 @@ describe('Hero', () => {
 
       await expect(resultPromise).rejects.toMatchObject({
         status: 500,
+      });
+    });
+  });
+
+  describe('update', () => {
+    it('should update a hero', async () => {
+      const changes: UpdateHero = {
+        realName: 'Peter Parker',
+      };
+
+      const updatedHero: Hero = {
+        ...HEROES_MOCK[0],
+        ...changes,
+      };
+
+      const resultPromise = firstValueFrom(service.update(HEROES_MOCK[0].id, changes));
+
+      const request = httpTesting.expectOne(`${apiUrl}/heroes/${HEROES_MOCK[0].id}`);
+
+      expect(request.request.method).toBe('PATCH');
+      expect(request.request.body).toEqual(changes);
+
+      request.flush(updatedHero);
+
+      await expect(resultPromise).resolves.toEqual(updatedHero);
+    });
+
+    it('should propagate an error when updating a hero fails', async () => {
+      const changes: UpdateHero = {
+        realName: 'Peter Parker',
+      };
+
+      const resultPromise = firstValueFrom(service.update(999, changes));
+
+      const request = httpTesting.expectOne(`${apiUrl}/heroes/999`);
+
+      request.flush('Fallo al actualizar el heroe', {
+        status: 404,
+        statusText: 'Not Found',
+      });
+
+      await expect(resultPromise).rejects.toMatchObject({
+        status: 404,
       });
     });
   });

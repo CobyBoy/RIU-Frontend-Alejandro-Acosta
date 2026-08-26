@@ -7,18 +7,26 @@ import { MatInputModule } from '@angular/material/input';
 import { HeroCard } from '../../ui/hero-card/hero-card';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { Hero } from '../../models/hero.model';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-hero-list',
-  imports: [MatFormFieldModule, MatInputModule, HeroCard, MatPaginatorModule, RouterLink, MatButtonModule],
+  imports: [
+    MatFormFieldModule,
+    MatInputModule,
+    HeroCard,
+    MatPaginatorModule,
+    RouterLink,
+    MatButtonModule,
+  ],
   templateUrl: './hero-list.html',
   styleUrl: './hero-list.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HeroList {
   private readonly heroService = inject(HeroService);
+  private readonly router = inject(Router);
 
   readonly query = signal('');
   readonly page = signal(0);
@@ -39,7 +47,9 @@ export class HeroList {
     this.heroService.getAllHeroes().pipe(
       map((heroes) => ({ heroes, loading: false, error: null })),
       startWith({ heroes: [], loading: true, error: null }),
-      catchError(() => of({ heroes: [], loading: false, error: 'No se pudieron cargar los heroes.' })),
+      catchError(() =>
+        of({ heroes: [], loading: false, error: 'No se pudieron cargar los heroes.' }),
+      ),
     ),
     {
       initialValue: {
@@ -56,7 +66,7 @@ export class HeroList {
   }
 
   onEditRequested(id: number): void {
-    console.log('Edit hero', id);
+    this.router.navigate(['/heroes', id, 'edit']);
   }
 
   onDeleteRequested(hero: Hero): void {

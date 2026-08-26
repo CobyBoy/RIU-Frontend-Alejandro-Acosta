@@ -1,18 +1,19 @@
 import { inject, Injectable, signal } from '@angular/core';
 import { HeroService } from './hero.service';
 import { Router } from '@angular/router';
-import { CreateHero } from '../models/hero.model';
+import { CreateHero, Hero, UpdateHero } from '../models/hero.model';
 import { finalize } from 'rxjs';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable()
 export class HeroFormFacade {
   private readonly heroService = inject(HeroService);
   private readonly router = inject(Router);
 
   readonly submitting = signal(false);
   readonly error = signal<string | null>(null);
+
+  readonly hero = signal<Hero | null>(null);
+  readonly loading = signal(false);
 
   create(hero: CreateHero): void {
     this.submitting.set(true);
@@ -31,7 +32,41 @@ export class HeroFormFacade {
       });
   }
 
+  load(id: number): void {
+    this.loading.set(true);
+    this.error.set(null);
+
+    this.heroService
+      .getById(id)
+      .pipe(finalize(() => this.loading.set(false)))
+      .subscribe({
+        next: (hero) => {
+          this.hero.set(hero);
+        },
+        error: () => {
+          this.error.set('No se pudo cargar el heroe.');
+        },
+      });
+  }
+
+  update(id: number, changes: UpdateHero): void {
+    this.submitting.set(true);
+    this.error.set(null);
+
+    this.heroService
+      .update(id, changes)
+      .pipe(finalize(() => this.submitting.set(false)))
+      .subscribe({
+        next: () => {
+          this.router.navigate(['/heroes']);
+        },
+        error: () => {
+          this.error.set('No se pudo actualizar el heroe.');
+        },
+      });
+  }
+
   cancel(): void {
-    void this.router.navigate(['/heroes']);
+    this.router.navigate(['/heroes']);
   }
 }

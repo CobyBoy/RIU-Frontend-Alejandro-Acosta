@@ -3,6 +3,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { HeroForm } from './hero-form';
 import { signal } from '@angular/core';
 import { HeroFormFacade } from '../../services/hero-form.facade';
+import { Hero } from '../../models/hero.model';
 
 describe('HeroForm', () => {
   let component: HeroForm;
@@ -10,29 +11,47 @@ describe('HeroForm', () => {
 
   const createMock = vi.fn();
   const cancelMock = vi.fn();
+  const updateMock = vi.fn();
+  const loadMock = vi.fn();
 
   const facadeMock = {
+    hero: signal<Hero | null>(null),
+    loading: signal(false),
     submitting: signal(false),
     error: signal<string | null>(null),
     create: createMock,
     cancel: cancelMock,
+    update: updateMock,
+    load: loadMock,
   };
 
   beforeEach(async () => {
     createMock.mockReset();
     cancelMock.mockReset();
+    updateMock.mockReset();
+    loadMock.mockReset();
     facadeMock.submitting.set(false);
     facadeMock.error.set(null);
+    facadeMock.hero.set(null);
+    facadeMock.loading.set(false);
 
     await TestBed.configureTestingModule({
       imports: [HeroForm],
-      providers: [
-        {
-          provide: HeroFormFacade,
-          useValue: facadeMock,
+    })
+      .overrideComponent(HeroForm, {
+        remove: {
+          providers: [HeroFormFacade],
         },
-      ],
-    }).compileComponents();
+        add: {
+          providers: [
+            {
+              provide: HeroFormFacade,
+              useValue: facadeMock,
+            },
+          ],
+        },
+      })
+      .compileComponents();
 
     fixture = TestBed.createComponent(HeroForm);
     component = fixture.componentInstance;
@@ -44,7 +63,7 @@ describe('HeroForm', () => {
   });
 
   it('should start with an empty form', () => {
-    expect(component.form.getRawValue()).toEqual({
+    expect(component.form.value).toEqual({
       name: '',
       realName: '',
       imageUrl: '',
@@ -155,5 +174,83 @@ describe('HeroForm', () => {
     component.onCancel();
 
     expect(cancelMock).toHaveBeenCalledOnce();
+  });
+
+  it('should not load a hero in create mode', () => {
+    expect(loadMock).not.toHaveBeenCalled();
+  });
+
+  it('should use the mocked facade', () => {
+    expect(component.facade).toBe(facadeMock);
+  });
+
+  describe('edit mode', () => {
+    it('should load the hero in edit mode', () => {
+      fixture.componentRef.setInput('id', '1');
+      fixture.detectChanges();
+
+      expect(loadMock).toHaveBeenCalledExactlyOnceWith(1);
+    });
+
+    it('should populate the form when a hero is loaded in edit mode', () => {
+      facadeMock.hero.set({
+        id: 1,
+        name: 'Spider-Man',
+        realName: 'Peter Benjamin Parker',
+        imageUrl: '/images/spider-man.jpg',
+        link: 'https://example.com/spider-man',
+      });
+
+      fixture.detectChanges();
+
+      expect(component.form.value).toEqual({
+        name: 'Spider-Man',
+        realName: 'Peter Benjamin Parker',
+        imageUrl: '/images/spider-man.jpg',
+        link: 'https://example.com/spider-man',
+      });
+    });
+
+    it('should use an empty link when the loaded hero has no link', () => {
+      facadeMock.hero.set({
+        id: 1,
+        name: 'Spider-Man',
+        realName: 'Peter Benjamin Parker',
+        imageUrl: '/images/spider-man.jpg',
+      });
+
+      fixture.detectChanges();
+
+      expect(component.form.controls.link.value).toBe('');
+    });
+
+    it('should update the hero when submitting in edit mode', () => {
+      fixture.componentRef.setInput('id', '1');
+      fixture.detectChanges();
+
+      component.form.setValue({
+        name: 'Spider-Man',
+        realName: 'Peter Parker',
+        imageUrl: '/images/spider-man.jpg',
+        link: 'https://example.com/spider-man',
+      });
+
+      component.onSubmit();
+
+      expect(updateMock).toHaveBeenCalledExactlyOnceWith(1, {
+        name: 'Spider-Man',
+        realName: 'Peter Parker',
+        imageUrl: '/images/spider-man.jpg',
+        link: 'https://example.com/spider-man',
+      });
+    });
+
+    it('should show loading while an existing hero is being loaded', () => {
+      facadeMock.loading.set(true);
+
+      fixture.detectChanges();
+
+      expect(fixture.nativeElement.textContent).toContain('Cargando heroe...');
+    });
   });
 });

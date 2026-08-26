@@ -4,7 +4,8 @@ import { HeroFormFacade } from './hero-form.facade';
 import { provideRouter, Router } from '@angular/router';
 import { HeroService } from './hero.service';
 import { Subject } from 'rxjs';
-import { CreateHero, Hero } from '../models/hero.model';
+import { CreateHero, Hero, UpdateHero } from '../models/hero.model';
+import { HEROES_MOCK } from '../testing/hero-list.mock';
 
 describe('HeroFormFacade', () => {
   let facade: HeroFormFacade;
@@ -12,6 +13,8 @@ describe('HeroFormFacade', () => {
 
   const createMock = vi.fn();
   const navigateMock = vi.fn();
+  const getByIdMock = vi.fn();
+  const updateMock = vi.fn();
 
   const hero: CreateHero = {
     name: 'Spider-Man',
@@ -26,6 +29,8 @@ describe('HeroFormFacade', () => {
     navigateMock.mockReset();
     createMock.mockReturnValue(createSubject.asObservable());
     navigateMock.mockResolvedValue(true);
+    getByIdMock.mockReset();
+    updateMock.mockReset();
 
     TestBed.configureTestingModule({
       providers: [
@@ -34,6 +39,8 @@ describe('HeroFormFacade', () => {
           provide: HeroService,
           useValue: {
             create: createMock,
+            getById: getByIdMock,
+            update: updateMock,
           },
         },
         {
@@ -106,5 +113,114 @@ describe('HeroFormFacade', () => {
     facade.cancel();
 
     expect(navigateMock).toHaveBeenCalledExactlyOnceWith(['/heroes']);
+  });
+
+  describe('load', () => {
+    it('should load a hero by id', () => {
+      const hero = HEROES_MOCK[0];
+      const loadSubject = new Subject<Hero>();
+
+      getByIdMock.mockReturnValue(loadSubject.asObservable());
+
+      facade.load(hero.id);
+
+      expect(getByIdMock).toHaveBeenCalledExactlyOnceWith(hero.id);
+      expect(facade.loading()).toBe(true);
+      expect(facade.error()).toBeNull();
+
+      loadSubject.next(hero);
+      loadSubject.complete();
+
+      expect(facade.hero()).toEqual(hero);
+      expect(facade.loading()).toBe(false);
+    });
+
+    it('should expose an error when loading a hero fails', () => {
+      const loadSubject = new Subject<Hero>();
+
+      getByIdMock.mockReturnValue(loadSubject.asObservable());
+
+      facade.load(999);
+
+      loadSubject.error(new Error('Load failed'));
+
+      expect(facade.error()).toBe('No se pudo cargar el heroe.');
+      expect(facade.loading()).toBe(false);
+    });
+
+    it('should clear a previous error before loading again', () => {
+      const firstSubject = new Subject<Hero>();
+
+      getByIdMock.mockReturnValue(firstSubject.asObservable());
+
+      facade.load(999);
+      firstSubject.error(new Error('Load failed'));
+
+      expect(facade.error()).toBe('No se pudo cargar el heroe.');
+
+      const secondSubject = new Subject<Hero>();
+
+      getByIdMock.mockReturnValue(secondSubject.asObservable());
+
+      facade.load(HEROES_MOCK[0].id);
+
+      expect(facade.error()).toBeNull();
+      expect(facade.loading()).toBe(true);
+    });
+  });
+
+  describe('update', () => {
+    it('should update a hero and set submitting while the request is pending', () => {
+      const updateSubject = new Subject<Hero>();
+
+      updateMock.mockReturnValue(updateSubject.asObservable());
+
+      const changes: UpdateHero = {
+        realName: 'Peter Parker',
+      };
+
+      facade.update(1, changes);
+
+      expect(updateMock).toHaveBeenCalledExactlyOnceWith(1, changes);
+      expect(facade.submitting()).toBe(true);
+      expect(facade.error()).toBeNull();
+    });
+
+    it('should navigate to heroes after updating successfully', () => {
+      const updateSubject = new Subject<Hero>();
+
+      updateMock.mockReturnValue(updateSubject.asObservable());
+
+      const changes: UpdateHero = {
+        realName: 'Peter Parker',
+      };
+
+      facade.update(1, changes);
+
+      updateSubject.next({
+        ...HEROES_MOCK[0],
+        ...changes,
+      });
+      updateSubject.complete();
+
+      expect(navigateMock).toHaveBeenCalledExactlyOnceWith(['/heroes']);
+      expect(facade.submitting()).toBe(false);
+    });
+
+    it('should expose an error when updating fails', () => {
+      const updateSubject = new Subject<Hero>();
+
+      updateMock.mockReturnValue(updateSubject.asObservable());
+
+      facade.update(1, {
+        realName: 'Peter Parker',
+      });
+
+      updateSubject.error(new Error('Update failed'));
+
+      expect(facade.error()).toBe('No se pudo actualizar el heroe.');
+      expect(navigateMock).not.toHaveBeenCalled();
+      expect(facade.submitting()).toBe(false);
+    });
   });
 });

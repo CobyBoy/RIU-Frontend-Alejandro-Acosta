@@ -1,68 +1,76 @@
 <p>hero-form works!</p>
 <section>
   <header class="mb-8">
-    <h1 class="text-3xl font-semibold">Agregar heroe</h1>
+    <h1 class="text-3xl font-semibold">{{ id() ? 'Editar' : 'Agregar' }} heroe</h1>
     <p>Completá los datos del nuevo heroe.</p>
   </header>
 
-  <form class="w-full max-w-md" [formGroup]="form" (ngSubmit)="onSubmit()">
-    <mat-form-field appearance="outline" class="w-full">
-      <mat-label>Nombre</mat-label>
-      <input matInput formControlName="name" required placeholder="Wanda" />
+  @if (facade.loading()) {
+    <p>Cargando heroe...</p>
+  } @else if (facade.error()) {
+    <p role="alert">
+      {{ facade.error() }}
+    </p>
+  } @else {
+    <form class="w-full max-w-md" [formGroup]="form" (ngSubmit)="onSubmit()">
+      <mat-form-field appearance="outline" class="w-full">
+        <mat-label>Nombre</mat-label>
+        <input matInput formControlName="name" required placeholder="Wanda" />
 
-      @if (form.controls.name.hasError('required')) {
-        <mat-error>El nombre es obligatorio.</mat-error>
-      } @else if (form.controls.name.hasError('minLength')) {
-        <mat-error>El nombre debe tener al menos 2 caracteres.</mat-error>
+        @if (form.controls.name.hasError('required')) {
+          <mat-error>El nombre es obligatorio.</mat-error>
+        } @else if (form.controls.name.hasError('minLength')) {
+          <mat-error>El nombre debe tener al menos 2 caracteres.</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Nombre real</mat-label>
+
+        <input matInput formControlName="realName" placeholder="Peter Parker" />
+
+        @if (form.controls.realName.hasError('required')) {
+          <mat-error>El nombre real es obligatorio.</mat-error>
+        } @else if (form.controls.realName.hasError('minlength')) {
+          <mat-error>El nombre real debe tener al menos 2 caracteres.</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Imagen</mat-label>
+
+        <input
+          matInput
+          type="url"
+          formControlName="imageUrl"
+          placeholder="https://example.com/hero.jpg"
+        />
+
+        @if (form.controls.imageUrl.hasError('required')) {
+          <mat-error>La imagen es obligatorio.</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Link</mat-label>
+        <input matInput type="url" formControlName="link" placeholder="https://example.com/hero" />
+      </mat-form-field>
+
+      @if (facade.error()) {
+        <p role="alert">
+          {{ facade.error() }}
+        </p>
       }
-    </mat-form-field>
 
-    <mat-form-field appearance="outline">
-      <mat-label>Nombre real</mat-label>
+      <div class="flex justify-end gap-3">
+        <button matButton type="button" [disabled]="facade.submitting()" (click)="onCancel()">
+          Cancelar
+        </button>
 
-      <input matInput formControlName="realName" placeholder="Peter Parker" />
-
-      @if (form.controls.realName.hasError('required')) {
-        <mat-error>El nombre real es obligatorio.</mat-error>
-      } @else if (form.controls.realName.hasError('minlength')) {
-        <mat-error>El nombre real debe tener al menos 2 caracteres.</mat-error>
-      }
-    </mat-form-field>
-
-    <mat-form-field appearance="outline">
-      <mat-label>Imagen</mat-label>
-
-      <input
-        matInput
-        type="url"
-        formControlName="imageUrl"
-        placeholder="https://example.com/hero.jpg"
-      />
-
-      @if (form.controls.imageUrl.hasError('required')) {
-        <mat-error>La imagen es obligatorio.</mat-error>
-      }
-    </mat-form-field>
-
-    <mat-form-field appearance="outline">
-      <mat-label>Link</mat-label>
-      <input matInput type="url" formControlName="link" placeholder="https://example.com/hero" />
-    </mat-form-field>
-
-    @if (facade.error()) {
-      <p role="alert">
-        {{ facade.error() }}
-      </p>
-    }
-
-    <div class="flex justify-end gap-3">
-      <button matButton type="button" [disabled]="facade.submitting()" (click)="onCancel()">
-        Cancelar
-      </button>
-
-      <button matButton="filled" type="submit">
-        {{ facade.submitting() ? 'Guardando...' : 'Guardar' }}
-      </button>
-    </div>
-  </form>
+        <button matButton="filled" type="submit">
+          {{ facade.submitting() ? 'Guardando...' : 'Guardar' }}
+        </button>
+      </div>
+    </form>
+  }
 </section>

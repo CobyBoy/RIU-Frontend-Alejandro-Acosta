@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { CreateHero, Hero } from '../models/hero.model';
+import { CreateHero, Hero, UpdateHero } from '../models/hero.model';
 import { API_URL } from '../../../core/config/api.token';
 import { Observable } from 'rxjs';
 
@@ -21,5 +21,9 @@ export class HeroService {
 
   create(hero: CreateHero): Observable<Hero> {
     return this.httpClient.post<Hero>(`${this.apiUrl}`, hero);
+  }
+
+  update(id: number, updatedHero: UpdateHero): Observable<Hero> {
+    return this.httpClient.patch<Hero>(`${this.apiUrl}/${id}`, updatedHero);
   }
 }

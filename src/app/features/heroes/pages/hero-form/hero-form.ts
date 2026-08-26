@@ -1,9 +1,8 @@
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, effect, inject, input } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { Router } from '@angular/router';
 import { CreateHero } from '../../models/hero.model';
 import { HeroFormFacade } from '../../services/hero-form.facade';
 
@@ -13,11 +12,12 @@ import { HeroFormFacade } from '../../services/hero-form.facade';
   templateUrl: './hero-form.html',
   styleUrl: './hero-form.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [HeroFormFacade],
 })
 export class HeroForm {
   private readonly formBuilder = inject(FormBuilder);
-  private readonly router = inject(Router);
   readonly facade = inject(HeroFormFacade);
+  readonly id = input<string>();
 
   readonly form = this.formBuilder.nonNullable.group({
     name: ['', [Validators.required, Validators.minLength(3)]],
@@ -26,11 +26,36 @@ export class HeroForm {
     link: [''],
   });
 
+  constructor() {
+    effect(() => {
+      const id = this.id();
+      if (!id) return;
+      this.facade.load(Number(id));
+    });
+
+    effect(() => {
+      const hero = this.facade.hero();
+      if (!hero) return;
+      this.form.setValue({
+        name: hero.name,
+        realName: hero.realName,
+        imageUrl: hero.imageUrl,
+        link: hero.link ?? '',
+      });
+    });
+  }
+
   onSubmit(): void {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
       return;
     }
+
+    const id = this.id();
+    if (id) {
+      this.facade.update(Number(id), this.createNewHero());
+    }
+
     this.facade.create(this.createNewHero());
   }
 

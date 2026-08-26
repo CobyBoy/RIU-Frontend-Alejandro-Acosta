@@ -9,4 +9,8 @@ export const HEROES_ROUTES: Routes = [
     path: 'new',
     loadComponent: () => import('./pages/hero-form/hero-form').then((m) => m.HeroForm),
   },
+  {
+    path: ':id/edit',
+    loadComponent: () => import('./pages/hero-form/hero-form').then((m) => m.HeroForm),
+  }
 ];

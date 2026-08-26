@@ -317,4 +317,58 @@ describe('HeroList', () => {
       expect(component.page()).toBe(0);
     });
   });
+
+  describe('pagination', () => {
+    it('should paginate heroes', () => {
+      heroesSubject.next(HEROES_MOCK);
+      fixture.detectChanges();
+
+      expect(component.pagedHeroes()).toEqual(HEROES_MOCK.slice(0, 5));
+
+      component.page.set(1);
+
+      expect(component.pagedHeroes()).toEqual(HEROES_MOCK.slice(5, 10));
+    });
+
+    it('should update the current page', () => {
+      component.onPageChange({
+        pageIndex: 1,
+        previousPageIndex: 0,
+        pageSize: 5,
+        length: 10,
+      });
+
+      expect(component.page()).toBe(1);
+      expect(component.pageSize()).toBe(5);
+    });
+
+    it('should update the page size', () => {
+      component.onPageChange({
+        pageIndex: 0,
+        previousPageIndex: 1,
+        pageSize: 10,
+        length: 10,
+      });
+
+      expect(component.page()).toBe(0);
+      expect(component.pageSize()).toBe(10);
+    });
+
+    it('should reset the page after deleting successfully', () => {
+      const hero = HEROES_MOCK[0];
+      const deleteSubject = new Subject<void>();
+
+      deleteMock.mockReturnValue(deleteSubject.asObservable());
+
+      component.page.set(1);
+
+      component.onDeleteRequested(hero);
+      dialogResultSubject.next(true);
+
+      deleteSubject.next();
+      deleteSubject.complete();
+
+      expect(component.page()).toBe(0);
+    });
+  });
 });

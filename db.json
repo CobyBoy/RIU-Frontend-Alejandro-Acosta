@@ -69,13 +69,6 @@
       "realName": "Vision",
       "link": "https://www.marvel.com/characters/vision",
       "imageUrl": "https://cdn.marvel.com/content/2x/013vis_ons_cut_dsk_01_1.webp"
-    },
-    {
-      "name": "war machine",
-      "realName": "james rhodes",
-      "link": "",
-      "imageUrl": "https://cdn.marvel.com/content/2x/042wmr_ons_cut_dsk_01_1.webp",
-      "id": "zu1atboz6Xo"
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"

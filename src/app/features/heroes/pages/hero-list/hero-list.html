@@ -1,5 +1,5 @@
-<section>
-  <h1>Heroes</h1>
+<section class="max-w-3xl mx-auto">
+  <h1 class="text-3xl font-semibold">Heroes</h1>
 
   <div class="flex justify-center items-center">
     <mat-form-field appearance="outline">
@@ -12,7 +12,7 @@
         (input)="onSearch($event)"
       />
     </mat-form-field>
-    <a matButton="filled" class="block" routerLink="/heroes/new"> Agregar heroe </a>
+    <a matButton="filled" class="block" routerLink="/heroes/new"> Añadir </a>
   </div>
 
   @if (loading()) {
@@ -22,14 +22,25 @@
   } @else if (heores().length === 0) {
     <p>No se encontraron heroes.</p>
   } @else {
-    <p>{{ totalHeroes() }} heroes encontrados.</p>
-    @for (hero of pagedHeroes(); track hero.id) {
+    <h2 class="text-lg font-semibold my-4">{{ totalHeroes() }} heroes encontrados.</h2>
+
+    <div class="grid grid-cols-2 gap-4">
+      @for (hero of pagedHeroes(); track hero.id) {
       <app-hero-card
         [hero]="hero"
         (editRequested)="onEditRequested($event)"
         (deleteRequested)="onDeleteRequested($event)"
       ></app-hero-card>
     }
+    </div>
+    <mat-paginator
+        [length]="totalHeroes()"
+        [pageIndex]="page()"
+        [pageSize]="pageSize()"
+        [pageSizeOptions]="pageSizeOptions"
+        (page)="onPageChange($event)"
+        aria-label="Seleccionar página de héroes"
+      ></mat-paginator>
   }
   @if (deleteError()) {
     <p role="alert">

@@ -18,7 +18,7 @@ import {
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { HeroCard } from '../../ui/hero-card/hero-card';
-import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { Hero } from '../../models/hero.model';
 import { Router, RouterLink } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
@@ -33,7 +33,7 @@ import { ConfirmDeleteDialog } from '../../ui/confirm-delete-dialog/confirm-dele
     HeroCard,
     MatPaginatorModule,
     RouterLink,
-    MatButtonModule,
+    MatButtonModule
   ],
   templateUrl: './hero-list.html',
   styleUrl: './hero-list.css',
@@ -46,11 +46,12 @@ export class HeroList {
 
   readonly query = signal('');
   readonly page = signal(0);
-  readonly pageSize = 5;
+  readonly pageSize = signal(4);
+  readonly pageSizeOptions = [4, 8, 12];
 
   readonly pagedHeroes = computed(() => {
-    const start = this.page() * this.pageSize;
-    const end = start + this.pageSize;
+    const start = this.page() * this.pageSize();
+    const end = start + this.pageSize();
     return this.heores().slice(start, end);
   });
 
@@ -124,8 +125,13 @@ export class HeroList {
         }),
       )
       .subscribe({
-        next: () => { this.refresh.update((value) => !value); },
+        next: () => { this.page.set(0); this.refresh.update((value) => !value); },
         error: () => { this.deleteError.set('No se pudo eliminar el heroe.'); },
       });
+  }
+
+  onPageChange(event: PageEvent) {
+    this.page.set(event.pageIndex);
+    this.pageSize.set(event.pageSize);
   }
 }

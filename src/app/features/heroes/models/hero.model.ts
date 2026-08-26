@@ -5,3 +5,5 @@ export interface Hero {
   link: string;
   imgUrl?: string;
 }
+
+export type CreateHero = Omit<Hero, 'id'>;

@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { HeroService } from './hero.service';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
-import { Hero } from '../models/hero.model';
+import { CreateHero, Hero } from '../models/hero.model';
 import { provideHttpClient } from '@angular/common/http';
 import { API_URL } from '../../../core/config/api.token';
 import { firstValueFrom } from 'rxjs';
@@ -64,6 +64,51 @@ describe('Hero', () => {
 
       await expect(resultPromise).rejects.toMatchObject({
         status: 404,
+      });
+    });
+
+    it('shoudl create a hero', async () => {
+      const newHero: CreateHero = {
+        name: 'War Machine',
+        realName: 'James Rhodes',
+        link: 'https://www.marvel.com/characters/war-machine-james-rhodes',
+        imgUrl: 'http://marvel.com/characters/1009/war_machine',
+      };
+
+      const createdHero: Hero = {
+        id: 3,
+        ...newHero,
+      };
+
+      const resultPromise = firstValueFrom(service.create(newHero));
+      const request = httpTesting.expectOne(`${apiUrl}/heroes`);
+
+      expect(request.request.method).toBe('POST');
+      expect(request.request.body).toEqual(newHero);
+
+      request.flush(createdHero);
+      await expect(resultPromise).resolves.toEqual(createdHero);
+    });
+
+    it('should propagate an error when creating a hero fails', async () => {
+      const newHero: CreateHero = {
+        name: 'War Machine',
+        realName: 'James Rhodes',
+        link: 'https://www.marvel.com/characters/war-machine-james-rhodes',
+        imgUrl: 'http://marvel.com/characters/1009/war_machine',
+      };
+
+      const resultPromise = firstValueFrom(service.create(newHero));
+
+      const request = httpTesting.expectOne(`${apiUrl}/heroes`);
+
+      request.flush('Create failed', {
+        status: 500,
+        statusText: 'Internal Server Error',
+      });
+
+      await expect(resultPromise).rejects.toMatchObject({
+        status: 500,
       });
     });
   });

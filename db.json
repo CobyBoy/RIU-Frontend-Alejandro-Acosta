@@ -40,7 +40,7 @@
       "name": "Wolverine",
       "realName": "James Howlett",
       "link": "https://www.marvel.com/characters/wolverine-logan",
-      "imageUrl": "https://cdn.marvel.com/content/2x/034wlv_com_character_imgUrlonleftdesktop.webp"
+      "imageUrl": "https://cdn.marvel.com/content/2x/034wlv_com_character_imgonleftdesktop.webp"
     },
     {
       "id": "7",
@@ -71,11 +71,11 @@
       "imageUrl": "https://cdn.marvel.com/content/2x/013vis_ons_cut_dsk_01_1.webp"
     },
     {
-      "name": "War Machine",
-      "realName": "James Rhodes",
+      "name": "war machine",
+      "realName": "james rhodes",
       "link": "",
-      "imageUrl": "https://cdn.marvel.com/content/2x/042wmr_ons_cut_dsk_01_1.webp\"",
-      "id": "e4uzPtj4Q_I"
+      "imageUrl": "https://cdn.marvel.com/content/2x/042wmr_ons_cut_dsk_01_1.webp",
+      "id": "zu1atboz6Xo"
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"

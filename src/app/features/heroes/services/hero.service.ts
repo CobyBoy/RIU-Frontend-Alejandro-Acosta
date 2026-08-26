@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { CreateHero, Hero, UpdateHero } from '../models/hero.model';
 import { API_URL } from '../../../core/config/api.token';
-import { Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -29,5 +29,12 @@ export class HeroService {
 
   delete(id: string): Observable<void> {
     return this.httpClient.delete<void>(`${this.apiUrl}/${id}`);
+  }
+
+  searchByName(query: string): Observable<Hero[]> {
+    const normalizedQuery = query.trim().toLowerCase();
+    return this.getAllHeroes().pipe(
+      map((heroes) => heroes.filter((hero) => hero.name.toLowerCase().includes(normalizedQuery))),
+    );
   }
 }

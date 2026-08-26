@@ -1,0 +1,11 @@
+<p>confirm-delete-dialog works!</p>
+<h2 mat-dialog-title>Eliminar heroe</h2>
+
+<mat-dialog-content>
+    <p>¿Estás seguro de que quieres eliminar el heroe {{ hero.name }}?</p>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+    <button matButton [mat-dialog-close]="false">Cancelar</button>
+    <button matButton="filled" [mat-dialog-close]="true">Eliminar</button>
+</mat-dialog-actions>

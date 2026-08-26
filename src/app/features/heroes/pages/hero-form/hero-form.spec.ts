@@ -194,7 +194,7 @@ describe('HeroForm', () => {
 
     it('should populate the form when a hero is loaded in edit mode', () => {
       facadeMock.hero.set({
-        id: 1,
+        id: "1",
         name: 'Spider-Man',
         realName: 'Peter Benjamin Parker',
         imageUrl: '/images/spider-man.jpg',
@@ -213,7 +213,7 @@ describe('HeroForm', () => {
 
     it('should use an empty link when the loaded hero has no link', () => {
       facadeMock.hero.set({
-        id: 1,
+        id: "1",
         name: 'Spider-Man',
         realName: 'Peter Benjamin Parker',
         imageUrl: '/images/spider-man.jpg',

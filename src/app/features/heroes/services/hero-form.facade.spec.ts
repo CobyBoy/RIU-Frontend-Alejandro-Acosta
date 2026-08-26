@@ -75,7 +75,7 @@ describe('HeroFormFacade', () => {
     facade.create(hero);
 
     createSubject.next({
-      id: 1,
+      id: "1",
       ...hero,
     });
     createSubject.complete();
@@ -140,7 +140,7 @@ describe('HeroFormFacade', () => {
 
       getByIdMock.mockReturnValue(loadSubject.asObservable());
 
-      facade.load(999);
+      facade.load("999");
 
       loadSubject.error(new Error('Load failed'));
 
@@ -153,7 +153,7 @@ describe('HeroFormFacade', () => {
 
       getByIdMock.mockReturnValue(firstSubject.asObservable());
 
-      facade.load(999);
+      facade.load("999");
       firstSubject.error(new Error('Load failed'));
 
       expect(facade.error()).toBe('No se pudo cargar el heroe.');
@@ -179,7 +179,7 @@ describe('HeroFormFacade', () => {
         realName: 'Peter Parker',
       };
 
-      facade.update(1, changes);
+      facade.update("1", changes);
 
       expect(updateMock).toHaveBeenCalledExactlyOnceWith(1, changes);
       expect(facade.submitting()).toBe(true);
@@ -195,7 +195,7 @@ describe('HeroFormFacade', () => {
         realName: 'Peter Parker',
       };
 
-      facade.update(1, changes);
+      facade.update("1", changes);
 
       updateSubject.next({
         ...HEROES_MOCK[0],
@@ -212,7 +212,7 @@ describe('HeroFormFacade', () => {
 
       updateMock.mockReturnValue(updateSubject.asObservable());
 
-      facade.update(1, {
+      facade.update("1", {
         realName: 'Peter Parker',
       });
 

@@ -5,10 +5,11 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { CreateHero } from '../../models/hero.model';
 import { HeroFormFacade } from '../../services/hero-form.facade';
+import { HeroUppercaseDirective } from '../../directives/hero-uppercase.directive';
 
 @Component({
   selector: 'app-hero-form',
-  imports: [ReactiveFormsModule, MatButtonModule, MatFormFieldModule, MatInputModule],
+  imports: [ReactiveFormsModule, MatButtonModule, MatFormFieldModule, MatInputModule, HeroUppercaseDirective],
   templateUrl: './hero-form.html',
   styleUrl: './hero-form.css',
   changeDetection: ChangeDetectionStrategy.OnPush,

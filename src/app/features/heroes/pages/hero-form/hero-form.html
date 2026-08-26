@@ -15,7 +15,7 @@
     <form class="w-full max-w-md" [formGroup]="form" (ngSubmit)="onSubmit()">
       <mat-form-field appearance="outline" class="w-full">
         <mat-label>Nombre</mat-label>
-        <input matInput formControlName="name" required placeholder="Wanda" />
+        <input matInput formControlName="name" required placeholder="WANDA" heroUppercase/>
 
         @if (form.controls.name.hasError('required')) {
           <mat-error>El nombre es obligatorio.</mat-error>

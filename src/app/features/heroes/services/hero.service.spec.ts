@@ -54,7 +54,7 @@ describe('Hero', () => {
     });
 
     it('should propagate a not found error', async () => {
-      const resultPromise = firstValueFrom(service.getById("999"));
+      const resultPromise = firstValueFrom(service.getById('999'));
       const request = httpTesting.expectOne(`${apiUrl}/heroes/999`);
 
       request.flush('Heroe no encontrado', {
@@ -76,7 +76,7 @@ describe('Hero', () => {
       };
 
       const createdHero: Hero = {
-        id: "3",
+        id: '3',
         ...newHero,
       };
 
@@ -141,7 +141,7 @@ describe('Hero', () => {
         realName: 'Peter Parker',
       };
 
-      const resultPromise = firstValueFrom(service.update("999", changes));
+      const resultPromise = firstValueFrom(service.update('999', changes));
 
       const request = httpTesting.expectOne(`${apiUrl}/heroes/999`);
 
@@ -168,7 +168,7 @@ describe('Hero', () => {
     });
 
     it('should propagate an error when deleting a hero fails', async () => {
-      const resultPromise = firstValueFrom(service.delete("999"));
+      const resultPromise = firstValueFrom(service.delete('999'));
       const request = httpTesting.expectOne(`${apiUrl}/heroes/999`);
 
       request.flush('Fallo al eliminar el heroe', {
@@ -179,6 +179,20 @@ describe('Hero', () => {
       await expect(resultPromise).rejects.toMatchObject({
         status: 404,
       });
+    });
+  });
+
+  describe('searchByName', () => {
+    it('should search heroes case-insensitively', async () => {
+      const resultPromise = firstValueFrom(service.searchByName('MA'));
+
+      const request = httpTesting.expectOne(`${apiUrl}/heroes`);
+
+      request.flush(HEROES_MOCK);
+
+      const result = await resultPromise;
+
+      expect(result.map((hero) => hero.name)).toEqual(['Spider-Man', 'Captain Marvel', 'Iron Man']);
     });
   });
 });

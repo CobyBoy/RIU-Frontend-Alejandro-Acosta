@@ -7,10 +7,12 @@ import { MatInputModule } from '@angular/material/input';
 import { HeroCard } from '../../ui/hero-card/hero-card';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { Hero } from '../../models/hero.model';
+import { RouterLink } from '@angular/router';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-hero-list',
-  imports: [MatFormFieldModule, MatInputModule, HeroCard, MatPaginatorModule],
+  imports: [MatFormFieldModule, MatInputModule, HeroCard, MatPaginatorModule, RouterLink, MatButtonModule],
   templateUrl: './hero-list.html',
   styleUrl: './hero-list.css',
   changeDetection: ChangeDetectionStrategy.OnPush,

@@ -7,6 +7,7 @@ import { HeroService } from '../../services/hero.service';
 import { HEROES_MOCK } from '../../testing/hero-list.mock';
 import { HeroCardStub } from '../../testing/hero-card.stub';
 import { HeroCard } from '../../ui/hero-card/hero-card';
+import { provideRouter } from '@angular/router';
 
 describe('HeroList', () => {
   let component: HeroList;
@@ -19,6 +20,7 @@ describe('HeroList', () => {
     await TestBed.configureTestingModule({
       imports: [HeroList],
       providers: [
+        provideRouter([]),
         {
           provide: HeroService,
           useValue: {

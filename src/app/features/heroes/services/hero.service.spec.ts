@@ -72,7 +72,7 @@ describe('Hero', () => {
         name: 'War Machine',
         realName: 'James Rhodes',
         link: 'https://www.marvel.com/characters/war-machine-james-rhodes',
-        imgUrl: 'http://marvel.com/characters/1009/war_machine',
+        imageUrl: 'http://marvel.com/characters/1009/war_machine',
       };
 
       const createdHero: Hero = {
@@ -95,7 +95,7 @@ describe('Hero', () => {
         name: 'War Machine',
         realName: 'James Rhodes',
         link: 'https://www.marvel.com/characters/war-machine-james-rhodes',
-        imgUrl: 'http://marvel.com/characters/1009/war_machine',
+        imageUrl: 'http://marvel.com/characters/1009/war_machine',
       };
 
       const resultPromise = firstValueFrom(service.create(newHero));

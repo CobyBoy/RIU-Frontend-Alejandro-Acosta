@@ -1,16 +1,19 @@
 <section>
   <h1>Heroes</h1>
 
-  <mat-form-field appearance="outline" class="w-full">
-    <mat-label>Buscar heroes</mat-label>
-    <input
-      matInput
-      type="search"
-      placeholder="Buscar"
-      [value]="query()"
-      (input)="onSearch($event)"
-    />
-  </mat-form-field>
+  <div class="flex justify-center items-center">
+    <mat-form-field appearance="outline">
+      <mat-label>Buscar heroes</mat-label>
+      <input
+        matInput
+        type="search"
+        placeholder="Buscar"
+        [value]="query()"
+        (input)="onSearch($event)"
+      />
+    </mat-form-field>
+    <a matButton="filled" class="block" routerLink="/heroes/new"> Agregar heroe </a>
+  </div>
 
   @if (loading()) {
     <p>Cargando heroes...</p>

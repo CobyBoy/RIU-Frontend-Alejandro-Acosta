@@ -31,4 +31,9 @@
       ></app-hero-card>
     }
   }
+  @if (deleteError()) {
+    <p role="alert">
+      {{ deleteError() }}
+    </p>
+  }
 </section>

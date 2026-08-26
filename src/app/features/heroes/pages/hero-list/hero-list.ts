@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { HeroService } from '../../services/hero.service';
-import { toSignal } from '@angular/core/rxjs-interop';
-import { catchError, map, of, startWith } from 'rxjs';
+import { toObservable, toSignal } from '@angular/core/rxjs-interop';
+import { catchError, filter, finalize, map, of, startWith, switchMap } from 'rxjs';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { HeroCard } from '../../ui/hero-card/hero-card';
@@ -9,6 +9,8 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { Hero } from '../../models/hero.model';
 import { Router, RouterLink } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
+import { MatDialog } from '@angular/material/dialog';
+import { ConfirmDeleteDialog } from '../../ui/confirm-delete-dialog/confirm-delete-dialog';
 
 @Component({
   selector: 'app-hero-list',
@@ -27,6 +29,7 @@ import { MatButtonModule } from '@angular/material/button';
 export class HeroList {
   private readonly heroService = inject(HeroService);
   private readonly router = inject(Router);
+  private readonly dialog = inject(MatDialog);
 
   readonly query = signal('');
   readonly page = signal(0);
@@ -42,13 +45,20 @@ export class HeroList {
   readonly error = computed(() => this.state().error);
 
   readonly totalHeroes = computed(() => this.heores().length);
+  readonly refresh = signal(false);
+  readonly deleting = signal(false);
+  readonly deleteError = signal<string | null>(null);
 
   private readonly state = toSignal(
-    this.heroService.getAllHeroes().pipe(
-      map((heroes) => ({ heroes, loading: false, error: null })),
-      startWith({ heroes: [], loading: true, error: null }),
-      catchError(() =>
-        of({ heroes: [], loading: false, error: 'No se pudieron cargar los heroes.' }),
+    toObservable(this.refresh).pipe(
+      switchMap(() =>
+        this.heroService.getAllHeroes().pipe(
+          map((heroes) => ({ heroes, loading: false, error: null })),
+          startWith({ heroes: [], loading: true, error: null }),
+          catchError(() =>
+            of({ heroes: [], loading: false, error: 'No se pudieron cargar los heroes.' }),
+          ),
+        ),
       ),
     ),
     {
@@ -65,11 +75,28 @@ export class HeroList {
     this.query.set(input.value);
   }
 
-  onEditRequested(id: number): void {
+  onEditRequested(id: string): void {
     this.router.navigate(['/heroes', id, 'edit']);
   }
 
   onDeleteRequested(hero: Hero): void {
-    console.log('Delete hero', hero);
+    const dialogRef = this.dialog.open(ConfirmDeleteDialog, {
+      data: hero,
+    });
+
+    dialogRef
+      .afterClosed()
+      .pipe(
+        filter((confirmed) => confirmed),
+        switchMap(() => {
+          this.deleting.set(true);
+          this.deleteError.set(null);
+          return this.heroService.delete(hero.id).pipe(finalize(() => this.deleting.set(false)));
+        }),
+      )
+      .subscribe({
+        next: () => { this.refresh.update((value) => !value); },
+        error: () => { this.deleteError.set('No se pudo eliminar el heroe.'); },
+      });
   }
 }

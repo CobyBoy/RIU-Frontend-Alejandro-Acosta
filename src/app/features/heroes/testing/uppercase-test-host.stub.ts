@@ -7,7 +7,5 @@ import { HeroUppercaseDirective } from '../directives/hero-uppercase.directive';
   template: ` <input heroUppercase [formControl]="control" /> `,
 })
 export class TestHost {
-  readonly control = new FormControl('', {
-    nonNullable: true,
-  });
+  readonly control = new FormControl<string | null>('');
 }

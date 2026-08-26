@@ -10,14 +10,14 @@
         },
         {
             "id": 2,
-            "name": "CAPTAIN MARVEL",
+            "name": "Captain Marvel",
             "realName": "Carol Danvers",
             "link": "https://www.marvel.com/characters/captain-marvel-carol-danvers",
             "imgUrl": "https://cdn.marvel.com/content/2x/008cmv_ons_cut_dsk_03_0.webp"
         },
         {
             "id": 3,
-            "name": "HULK",
+            "name": "Hulk",
             "realName": "Robert Bruce Banner",
             "link": "https://www.marvel.com/characters/hulk-bruce-banner",
             "imgUrl": "https://cdn.marvel.com/content/2x/006hbb_ons_cut_dsk_01_2.webp"
@@ -63,6 +63,13 @@
             "realName": "Thor Odinson",
             "link": "https://www.marvel.com/characters/thor-thor-odinson",
             "imgUrl": "https://cdn.marvel.com/content/2x/004tho_ons_cut_dsk_01_3.webp"
+        },
+        {
+            "id": 10,
+            "name": "Vision",
+            "realName": "Vision",
+            "link": "https://www.marvel.com/characters/vision",
+            "imgUrl": "https://cdn.marvel.com/content/2x/013vis_ons_cut_dsk_01_1.webp"
         }
     ]
 }

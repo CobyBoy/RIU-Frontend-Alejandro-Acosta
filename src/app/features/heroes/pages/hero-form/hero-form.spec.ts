@@ -19,6 +19,7 @@ describe('HeroForm', () => {
     loading: signal(false),
     submitting: signal(false),
     error: signal<string | null>(null),
+    submitError: signal<string | null>(null),
     create: createMock,
     cancel: cancelMock,
     update: updateMock,
@@ -32,6 +33,7 @@ describe('HeroForm', () => {
     loadMock.mockReset();
     facadeMock.submitting.set(false);
     facadeMock.error.set(null);
+    facadeMock.submitError.set(null);
     facadeMock.hero.set(null);
     facadeMock.loading.set(false);
 

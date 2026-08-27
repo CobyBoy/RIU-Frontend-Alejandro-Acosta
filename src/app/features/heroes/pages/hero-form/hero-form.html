@@ -63,9 +63,9 @@
         <input matInput type="url" formControlName="link" placeholder="https://example.com/hero" />
       </mat-form-field>
 
-      @if (facade.error()) {
+      @if (facade.submitError()) {
         <p class="text-sm font-medium text-red-700" role="alert">
-          {{ facade.error() }}
+          {{ facade.submitError() }}
         </p>
       }
       </div>

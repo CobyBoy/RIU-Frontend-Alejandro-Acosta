@@ -16,13 +16,14 @@ export class HeroFormFacade {
 
   readonly submitting = signal(false);
   readonly error = signal<string | null>(null);
+  readonly submitError = signal<string | null>(null);
 
   readonly hero = signal<Hero | null>(null);
   readonly loading = signal(false);
 
   create(hero: CreateHero): void {
     this.submitting.set(true);
-    this.error.set(null);
+    this.submitError.set(null);
 
     this.heroService
       .create(hero)
@@ -33,7 +34,7 @@ export class HeroFormFacade {
       .subscribe({
         next: this.onSuccess(HERO_FEEDBACK.created),
         error: () => {
-          this.error.set(HERO_FEEDBACK.createdFailed);
+          this.submitError.set(HERO_FEEDBACK.createdFailed);
         },
       });
   }
@@ -60,7 +61,7 @@ export class HeroFormFacade {
 
   update(id: string, changes: UpdateHero): void {
     this.submitting.set(true);
-    this.error.set(null);
+    this.submitError.set(null);
 
     this.heroService
       .update(id, changes)
@@ -71,7 +72,7 @@ export class HeroFormFacade {
       .subscribe({
         next: this.onSuccess(HERO_FEEDBACK.updated),
         error: () => {
-          this.error.set(HERO_FEEDBACK.updateFailed);
+          this.submitError.set(HERO_FEEDBACK.updateFailed);
         },
       });
   }

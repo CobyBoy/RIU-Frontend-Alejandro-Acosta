@@ -91,7 +91,7 @@ describe('HeroFormFacade', () => {
 
       createSubject.error(new Error('Create failed'));
 
-      expect(facade.error()).toBe(HERO_FEEDBACK.createdFailed);
+      expect(facade.submitError()).toBe(HERO_FEEDBACK.createdFailed);
       expect(navigateMock).not.toHaveBeenCalled();
       expect(facade.submitting()).toBe(false);
     });
@@ -100,14 +100,14 @@ describe('HeroFormFacade', () => {
       facade.create(hero);
       createSubject.error(new Error('Create failed'));
 
-      expect(facade.error()).toBe(HERO_FEEDBACK.createdFailed);
+      expect(facade.submitError()).toBe(HERO_FEEDBACK.createdFailed);
 
       createSubject = new Subject<Hero>();
       createMock.mockReturnValue(createSubject.asObservable());
 
       facade.create(hero);
 
-      expect(facade.error()).toBeNull();
+      expect(facade.submitError()).toBeNull();
       expect(facade.submitting()).toBe(true);
     });
   });
@@ -221,7 +221,7 @@ describe('HeroFormFacade', () => {
 
       updateSubject.error(new Error('Update failed'));
 
-      expect(facade.error()).toBe(HERO_FEEDBACK.updateFailed);
+      expect(facade.submitError()).toBe(HERO_FEEDBACK.updateFailed);
       expect(navigateMock).not.toHaveBeenCalled();
       expect(facade.submitting()).toBe(false);
     });

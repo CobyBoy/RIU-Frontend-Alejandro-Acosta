@@ -62,113 +62,6 @@ describe('HeroForm', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should start with an empty form', () => {
-    expect(component.form.value).toEqual({
-      name: '',
-      realName: '',
-      imageUrl: '',
-      link: '',
-    });
-  });
-
-  it('should require name and real name', () => {
-    component.form.controls.name.markAsTouched();
-    component.form.controls.realName.markAsTouched();
-
-    expect(component.form.controls.name.hasError('required')).toBe(true);
-    expect(component.form.controls.realName.hasError('required')).toBe(true);
-    expect(component.form.invalid).toBe(true);
-  });
-
-  it('should require a minimum length of three characters', () => {
-    component.form.controls.name.setValue('A');
-    component.form.controls.realName.setValue('B');
-
-    expect(component.form.controls.name.hasError('minlength')).toBe(true);
-    expect(component.form.controls.realName.hasError('minlength')).toBe(true);
-    expect(component.form.invalid).toBe(true);
-  });
-
-  it('should not create a hero when the form is invalid', () => {
-    component.onSubmit();
-
-    expect(createMock).not.toHaveBeenCalled();
-    expect(component.form.controls.name.touched).toBe(true);
-    expect(component.form.controls.realName.touched).toBe(true);
-  });
-
-  it('should create a hero when the form is valid', () => {
-    component.form.setValue({
-      name: 'Spider-Man',
-      realName: 'Peter Parker',
-      imageUrl: 'https://example.com/spider-man.jpg',
-      link: 'https://example.com/spider-man',
-    });
-
-    component.onSubmit();
-
-    expect(createMock).toHaveBeenCalledExactlyOnceWith({
-      name: 'Spider-Man',
-      realName: 'Peter Parker',
-      imageUrl: 'https://example.com/spider-man.jpg',
-      link: 'https://example.com/spider-man',
-    });
-  });
-
-  it('should trim form values before creating a hero', () => {
-    component.form.setValue({
-      name: '  Spider-Man  ',
-      realName: '  Peter Parker  ',
-      imageUrl: '  https://example.com/spider-man.jpg  ',
-      link: '  https://example.com/spider-man  ',
-    });
-
-    component.onSubmit();
-
-    expect(createMock).toHaveBeenCalledExactlyOnceWith({
-      name: 'Spider-Man',
-      realName: 'Peter Parker',
-      imageUrl: 'https://example.com/spider-man.jpg',
-      link: 'https://example.com/spider-man',
-    });
-  });
-
-  it('should omit an empty optional link when creating a hero', () => {
-    component.form.setValue({
-      name: 'Spider-Man',
-      realName: 'Peter Parker',
-      imageUrl: 'https://example.com/spider-man.jpg',
-      link: '',
-    });
-
-    component.onSubmit();
-
-    expect(createMock).toHaveBeenCalledExactlyOnceWith({
-      name: 'Spider-Man',
-      realName: 'Peter Parker',
-      imageUrl: 'https://example.com/spider-man.jpg',
-      link: '',
-    });
-  });
-
-  it('should omit an optional link containing only whitespace', () => {
-    component.form.setValue({
-      name: 'Spider-Man',
-      realName: 'Peter Parker',
-      imageUrl: 'https://example.com/spider-man.jpg',
-      link: '   ',
-    });
-
-    component.onSubmit();
-
-    expect(createMock).toHaveBeenCalledExactlyOnceWith({
-      name: 'Spider-Man',
-      realName: 'Peter Parker',
-      imageUrl: 'https://example.com/spider-man.jpg',
-      link: '',
-    });
-  });
-
   it('should cancel through the facade', () => {
     facadeMock.submitting.set(true);
     component.onCancel();
@@ -176,12 +69,123 @@ describe('HeroForm', () => {
     expect(cancelMock).toHaveBeenCalledOnce();
   });
 
-  it('should not load a hero in create mode', () => {
-    expect(loadMock).not.toHaveBeenCalled();
-  });
-
   it('should use the mocked facade', () => {
     expect(component.facade).toBe(facadeMock);
+  });
+
+  describe('form', () => {
+    it('should start with an empty form', () => {
+      expect(component.form.value).toEqual({
+        name: '',
+        realName: '',
+        imageUrl: '',
+        link: '',
+      });
+    });
+
+    it('should require name and real name', () => {
+      component.form.controls.name.markAsTouched();
+      component.form.controls.realName.markAsTouched();
+
+      expect(component.form.controls.name.hasError('required')).toBe(true);
+      expect(component.form.controls.realName.hasError('required')).toBe(true);
+      expect(component.form.invalid).toBe(true);
+    });
+
+    it('should require a minimum length of three characters', () => {
+      component.form.controls.name.setValue('A');
+      component.form.controls.realName.setValue('B');
+
+      expect(component.form.controls.name.hasError('minlength')).toBe(true);
+      expect(component.form.controls.realName.hasError('minlength')).toBe(true);
+      expect(component.form.invalid).toBe(true);
+    });
+
+    it('should not create a hero when the form is invalid', () => {
+      component.onSubmit();
+
+      expect(createMock).not.toHaveBeenCalled();
+      expect(component.form.controls.name.touched).toBe(true);
+      expect(component.form.controls.realName.touched).toBe(true);
+    });
+  });
+
+  describe('create mode', () => {
+    it('should not load a hero in create mode', () => {
+      expect(loadMock).not.toHaveBeenCalled();
+    });
+
+    it('should create a hero when the form is valid', () => {
+      component.form.setValue({
+        name: 'Spider-Man',
+        realName: 'Peter Parker',
+        imageUrl: 'https://example.com/spider-man.jpg',
+        link: 'https://example.com/spider-man',
+      });
+
+      component.onSubmit();
+
+      expect(createMock).toHaveBeenCalledExactlyOnceWith({
+        name: 'Spider-Man',
+        realName: 'Peter Parker',
+        imageUrl: 'https://example.com/spider-man.jpg',
+        link: 'https://example.com/spider-man',
+      });
+    });
+
+    it('should omit an empty optional link when creating a hero', () => {
+      component.form.setValue({
+        name: 'Spider-Man',
+        realName: 'Peter Parker',
+        imageUrl: 'https://example.com/spider-man.jpg',
+        link: '',
+      });
+
+      component.onSubmit();
+
+      expect(createMock).toHaveBeenCalledExactlyOnceWith({
+        name: 'Spider-Man',
+        realName: 'Peter Parker',
+        imageUrl: 'https://example.com/spider-man.jpg',
+        link: '',
+      });
+    });
+
+    it('should omit an optional link containing only whitespace', () => {
+      component.form.setValue({
+        name: 'Spider-Man',
+        realName: 'Peter Parker',
+        imageUrl: 'https://example.com/spider-man.jpg',
+        link: '   ',
+      });
+
+      component.onSubmit();
+
+      expect(createMock).toHaveBeenCalledExactlyOnceWith({
+        name: 'Spider-Man',
+        realName: 'Peter Parker',
+        imageUrl: 'https://example.com/spider-man.jpg',
+        link: '',
+      });
+    });
+
+    it('should trim form values before creating a hero', () => {
+      component.form.setValue({
+        name: '  Spider-Man  ',
+        realName: '  Peter Parker  ',
+        imageUrl: '  https://example.com/spider-man.jpg  ',
+        link: '  https://example.com/spider-man  ',
+      });
+
+      component.onSubmit();
+
+      expect(createMock).toHaveBeenCalledExactlyOnceWith({
+        name: 'Spider-Man',
+        realName: 'Peter Parker',
+        imageUrl: 'https://example.com/spider-man.jpg',
+        link: 'https://example.com/spider-man',
+      });
+    });
   });
 
   describe('edit mode', () => {
@@ -189,12 +193,12 @@ describe('HeroForm', () => {
       fixture.componentRef.setInput('id', '1');
       fixture.detectChanges();
 
-      expect(loadMock).toHaveBeenCalledExactlyOnceWith("1");
+      expect(loadMock).toHaveBeenCalledExactlyOnceWith('1');
     });
 
     it('should populate the form when a hero is loaded in edit mode', () => {
       facadeMock.hero.set({
-        id: "1",
+        id: '1',
         name: 'Spider-Man',
         realName: 'Peter Benjamin Parker',
         imageUrl: '/images/spider-man.jpg',
@@ -213,7 +217,7 @@ describe('HeroForm', () => {
 
     it('should use an empty link when the loaded hero has no link', () => {
       facadeMock.hero.set({
-        id: "1",
+        id: '1',
         name: 'Spider-Man',
         realName: 'Peter Benjamin Parker',
         imageUrl: '/images/spider-man.jpg',
@@ -237,7 +241,7 @@ describe('HeroForm', () => {
 
       component.onSubmit();
 
-      expect(updateMock).toHaveBeenCalledExactlyOnceWith("1", {
+      expect(updateMock).toHaveBeenCalledExactlyOnceWith('1', {
         name: 'Spider-Man',
         realName: 'Peter Parker',
         imageUrl: '/images/spider-man.jpg',

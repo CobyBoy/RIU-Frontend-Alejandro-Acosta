@@ -63,50 +63,52 @@ describe('HeroFormFacade', () => {
     expect(facade.error()).toBeNull();
   });
 
-  it('should create a hero and set submitting while the request is pending', () => {
-    facade.create(hero);
+  describe('create', () => {
+    it('should create a hero and set submitting while the request is pending', () => {
+      facade.create(hero);
 
-    expect(createMock).toHaveBeenCalledExactlyOnceWith(hero);
-    expect(facade.submitting()).toBe(true);
-    expect(facade.error()).toBeNull();
-  });
-
-  it('should navigate to heroes after creating a hero successfully', () => {
-    facade.create(hero);
-
-    createSubject.next({
-      id: "1",
-      ...hero,
+      expect(createMock).toHaveBeenCalledExactlyOnceWith(hero);
+      expect(facade.submitting()).toBe(true);
+      expect(facade.error()).toBeNull();
     });
-    createSubject.complete();
 
-    expect(navigateMock).toHaveBeenCalledExactlyOnceWith(['/heroes']);
-    expect(facade.submitting()).toBe(false);
-  });
+    it('should navigate to heroes after creating a hero successfully', () => {
+      facade.create(hero);
 
-  it('should expose an error when hero creation fails', () => {
-    facade.create(hero);
+      createSubject.next({
+        id: '1',
+        ...hero,
+      });
+      createSubject.complete();
 
-    createSubject.error(new Error('Create failed'));
+      expect(navigateMock).toHaveBeenCalledExactlyOnceWith(['/heroes']);
+      expect(facade.submitting()).toBe(false);
+    });
 
-    expect(facade.error()).toBe('No se pudo crear el heroe.');
-    expect(navigateMock).not.toHaveBeenCalled();
-    expect(facade.submitting()).toBe(false);
-  });
+    it('should expose an error when hero creation fails', () => {
+      facade.create(hero);
 
-  it('should clear a previous error before creating again', () => {
-    facade.create(hero);
-    createSubject.error(new Error('Create failed'));
+      createSubject.error(new Error('Create failed'));
 
-    expect(facade.error()).toBe('No se pudo crear el heroe.');
+      expect(facade.error()).toBe('No se pudo crear el heroe.');
+      expect(navigateMock).not.toHaveBeenCalled();
+      expect(facade.submitting()).toBe(false);
+    });
 
-    createSubject = new Subject<Hero>();
-    createMock.mockReturnValue(createSubject.asObservable());
+    it('should clear a previous error before creating again', () => {
+      facade.create(hero);
+      createSubject.error(new Error('Create failed'));
 
-    facade.create(hero);
+      expect(facade.error()).toBe('No se pudo crear el heroe.');
 
-    expect(facade.error()).toBeNull();
-    expect(facade.submitting()).toBe(true);
+      createSubject = new Subject<Hero>();
+      createMock.mockReturnValue(createSubject.asObservable());
+
+      facade.create(hero);
+
+      expect(facade.error()).toBeNull();
+      expect(facade.submitting()).toBe(true);
+    });
   });
 
   it('should navigate to heroes when cancelling', () => {
@@ -140,7 +142,7 @@ describe('HeroFormFacade', () => {
 
       getByIdMock.mockReturnValue(loadSubject.asObservable());
 
-      facade.load("999");
+      facade.load('999');
 
       loadSubject.error(new Error('Load failed'));
 
@@ -153,7 +155,7 @@ describe('HeroFormFacade', () => {
 
       getByIdMock.mockReturnValue(firstSubject.asObservable());
 
-      facade.load("999");
+      facade.load('999');
       firstSubject.error(new Error('Load failed'));
 
       expect(facade.error()).toBe('No se pudo cargar el heroe.');
@@ -179,9 +181,9 @@ describe('HeroFormFacade', () => {
         realName: 'Peter Parker',
       };
 
-      facade.update("1", changes);
+      facade.update('1', changes);
 
-      expect(updateMock).toHaveBeenCalledExactlyOnceWith("1", changes);
+      expect(updateMock).toHaveBeenCalledExactlyOnceWith('1', changes);
       expect(facade.submitting()).toBe(true);
       expect(facade.error()).toBeNull();
     });
@@ -195,7 +197,7 @@ describe('HeroFormFacade', () => {
         realName: 'Peter Parker',
       };
 
-      facade.update("1", changes);
+      facade.update('1', changes);
 
       updateSubject.next({
         ...HEROES_MOCK[0],
@@ -212,7 +214,7 @@ describe('HeroFormFacade', () => {
 
       updateMock.mockReturnValue(updateSubject.asObservable());
 
-      facade.update("1", {
+      facade.update('1', {
         realName: 'Peter Parker',
       });
 

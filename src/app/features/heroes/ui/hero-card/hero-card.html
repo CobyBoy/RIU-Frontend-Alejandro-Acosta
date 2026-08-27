@@ -1,26 +1,37 @@
-<mat-card class="h-full overflow-hidden">
-  <div class="h-52 overflow-hidden aspect-4/5">
+<mat-card
+  class="flex flex-col h-full overflow-hidden border border-slate-200 bg-white shadow-sm transition-shadow hover:shadow-md"
+>
+  <div class="h-52 overflow-hidden aspect-4/3">
     <img
-      class="h-52 w-full object-contain object-center"
+      class="h-full w-full object-cover object-center"
       [src]="hero().imageUrl"
       [alt]="hero().name"
       loading="lazy"
     />
   </div>
 
-  <mat-card-content class="space-y-1 pt-4">
-    <h2 class="text-lg font-semibold">
-      <a [href]="hero().link" target="_blank" rel="noopener">{{ hero().name }}</a>
-    </h2>
+  <div class="bg-[#1e2029] text-white before:bg-red-600 before:h-1.25 before:absolute before:left-0 before:right-0">
+    <mat-card-content class="flex flex-1 flex-col px-5 pb-5 pt-4">
+      <h2 class="text-lg font-semibold wrap-break-word leading-7">
+        <a
+          class="rounded-sm outline-none transition-colors hover:underline"
+          [href]="hero().link"
+          target="_blank"
+          rel="noopener"
+        >
+          {{ hero().name }}
+        </a>
+      </h2>
 
-    <p class="text-sm text-gray-600">
-      {{ hero().realName }}
-    </p>
-  </mat-card-content>
+      <p class="text-sm  mt-2 wrap-break-word leading-6">
+        {{ hero().realName }}
+      </p>
+    </mat-card-content>
 
-  <mat-card-actions align="end">
-    <button matButton type="button" (click)="onEdit()" data-testid="edit-hero">Editar</button>
+    <mat-card-actions align="end" class="m-0 flex gap-2 border-t border-slate-200 px-3 py-2">
+      <button style="--mat-sys-primary: white" matButton="outlined" type="button" (click)="onEdit()" data-testid="edit-hero">Editar</button>
 
-    <button matButton type="button" (click)="onDelete()" data-testid="delete-hero">Borrar</button>
-  </mat-card-actions>
+      <button style="--mat-sys-primary: white" matButton="outlined" type="button" (click)="onDelete()" data-testid="delete-hero">Borrar</button>
+    </mat-card-actions>
+  </div>
 </mat-card>

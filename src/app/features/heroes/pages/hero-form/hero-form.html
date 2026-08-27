@@ -1,21 +1,28 @@
-<p>hero-form works!</p>
-<section>
-  <header class="mb-8">
+<section class="mx-auto w-full max-w-2xl px-4 py-8 sm:px-6 lg:px-8">
+  <header class="mb-8 text-center sm:text-left">
     <h1 class="text-3xl font-semibold">{{ id() ? 'Editar' : 'Agregar' }} heroe</h1>
-    <p>Completá los datos del nuevo heroe.</p>
+    <p class="mt-2 text-sm">Completá los datos del nuevo heroe.</p>
   </header>
 
   @if (facade.loading()) {
-    <p>Cargando heroe...</p>
+    <div class="px-6 py-12 text-center" role="status">
+      <p class="text-sm font-medium">Cargando heroe...</p>
+    </div>
   } @else if (facade.error()) {
-    <p role="alert">
-      {{ facade.error() }}
+    <div class="rounded-xl border border-red-200 bg-red-50 px-6 py-5">
+      <p class="text-sm font-medium text-red-800" role="alert">
+      {{ facade.error() }} error
     </p>
+    </div>
   } @else {
-    <form class="w-full max-w-md" [formGroup]="form" (ngSubmit)="onSubmit()">
-      <mat-form-field appearance="outline" class="w-full">
+    <form class="w-full rounded-xl border border-slate-200 p-5 shadow-sm sm:p-7 max-w-md" 
+      [formGroup]="form" 
+      (ngSubmit)="onSubmit()"
+      >
+      <div class="space-y-5">
+        <mat-form-field appearance="outline" class="w-full">
         <mat-label>Nombre</mat-label>
-        <input matInput formControlName="name" required placeholder="WANDA" heroUppercase/>
+        <input matInput formControlName="name" required placeholder="WANDA" heroUppercase />
 
         @if (form.controls.name.hasError('required')) {
           <mat-error>El nombre es obligatorio.</mat-error>
@@ -24,7 +31,7 @@
         }
       </mat-form-field>
 
-      <mat-form-field appearance="outline">
+      <mat-form-field appearance="outline" class="w-full">
         <mat-label>Nombre real</mat-label>
 
         <input matInput formControlName="realName" placeholder="Peter Parker" />
@@ -36,7 +43,7 @@
         }
       </mat-form-field>
 
-      <mat-form-field appearance="outline">
+      <mat-form-field appearance="outline" class="w-full">
         <mat-label>Imagen</mat-label>
 
         <input
@@ -51,23 +58,35 @@
         }
       </mat-form-field>
 
-      <mat-form-field appearance="outline">
+      <mat-form-field appearance="outline" class="w-full">
         <mat-label>Link</mat-label>
         <input matInput type="url" formControlName="link" placeholder="https://example.com/hero" />
       </mat-form-field>
 
       @if (facade.error()) {
-        <p role="alert">
+        <p class="text-sm font-medium text-red-700" role="alert">
           {{ facade.error() }}
         </p>
       }
+      </div>
 
-      <div class="flex justify-end gap-3">
-        <button matButton type="button" [attr.aria-disabled]="facade.submitting()" (click)="onCancel()">
+      <div class="flex flex-col-reverse sm:flex-row sm:justify-end gap-3 pt-5">
+        <button
+          matButton
+          type="button"
+          class="w-full sm:w-auto"
+          [attr.aria-disabled]="facade.submitting()"
+          (click)="onCancel()"
+        >
           Cancelar
         </button>
 
-        <button matButton="filled" type="submit" [attr.aria-disabled]="facade.submitting() || form.invalid">
+        <button
+          matButton="filled"
+          type="submit"
+          class="w-full sm:w-auto"
+          [attr.aria-disabled]="facade.submitting() || form.invalid"
+        >
           {{ facade.submitting() ? 'Guardando...' : 'Guardar' }}
         </button>
       </div>

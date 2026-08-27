@@ -9,11 +9,17 @@ import { HeroUppercaseDirective } from '../../../../shared/directives/hero-upper
 
 @Component({
   selector: 'app-hero-form',
-  imports: [ReactiveFormsModule, MatButtonModule, MatFormFieldModule, MatInputModule, HeroUppercaseDirective],
+  imports: [
+    ReactiveFormsModule,
+    MatButtonModule,
+    MatFormFieldModule,
+    MatInputModule,
+    HeroUppercaseDirective,
+  ],
   templateUrl: './hero-form.html',
   styleUrl: './hero-form.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [HeroFormFacade]
+  providers: [HeroFormFacade],
 })
 export class HeroForm {
   private readonly formBuilder = inject(FormBuilder);

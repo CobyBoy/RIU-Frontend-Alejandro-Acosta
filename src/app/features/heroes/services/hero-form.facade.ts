@@ -4,19 +4,21 @@ import { Router } from '@angular/router';
 import { CreateHero, Hero, UpdateHero } from '../models/hero.model';
 import { finalize } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { HERO_FEEDBACK } from '../models/hero-feedback';
 
 @Injectable()
 export class HeroFormFacade {
   private readonly heroService = inject(HeroService);
   private readonly router = inject(Router);
   private readonly destroyRef = inject(DestroyRef);
+  private readonly snackBar = inject(MatSnackBar);
 
   readonly submitting = signal(false);
   readonly error = signal<string | null>(null);
 
   readonly hero = signal<Hero | null>(null);
   readonly loading = signal(false);
-  
 
   create(hero: CreateHero): void {
     this.submitting.set(true);
@@ -29,11 +31,9 @@ export class HeroFormFacade {
         finalize(() => this.submitting.set(false)),
       )
       .subscribe({
-        next: () => {
-          void this.router.navigate(['/heroes']);
-        },
+        next: this.onSuccess(HERO_FEEDBACK.created),
         error: () => {
-          this.error.set('No se pudo crear el heroe.');
+          this.error.set(HERO_FEEDBACK.createdFailed);
         },
       });
   }
@@ -53,7 +53,7 @@ export class HeroFormFacade {
           this.hero.set(hero);
         },
         error: () => {
-          this.error.set('No se pudo cargar el heroe.');
+          this.error.set(HERO_FEEDBACK.loadHeroFailed);
         },
       });
   }
@@ -69,13 +69,20 @@ export class HeroFormFacade {
         finalize(() => this.submitting.set(false)),
       )
       .subscribe({
-        next: () => {
-          this.router.navigate(['/heroes']);
-        },
+        next: this.onSuccess(HERO_FEEDBACK.updated),
         error: () => {
-          this.error.set('No se pudo actualizar el heroe.');
+          this.error.set(HERO_FEEDBACK.updateFailed);
         },
       });
+  }
+
+  private onSuccess(message: string) {
+    return () => {
+      this.snackBar.open(message, undefined, {
+        duration: 4000,
+      });
+      void this.router.navigate(['/heroes']);
+    };
   }
 
   cancel(): void {

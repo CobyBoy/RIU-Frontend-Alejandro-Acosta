@@ -1,11 +1,12 @@
 import { TestBed } from '@angular/core/testing';
 
 import { HeroFormFacade } from './hero-form.facade';
-import { provideRouter, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { HeroService } from './hero.service';
 import { Subject } from 'rxjs';
 import { CreateHero, Hero, UpdateHero } from '../models/hero.model';
 import { HEROES_MOCK } from '../testing/hero-list.mock';
+import { HERO_FEEDBACK } from '../models/hero-feedback';
 
 describe('HeroFormFacade', () => {
   let facade: HeroFormFacade;
@@ -90,7 +91,7 @@ describe('HeroFormFacade', () => {
 
       createSubject.error(new Error('Create failed'));
 
-      expect(facade.error()).toBe('No se pudo crear el heroe.');
+      expect(facade.error()).toBe(HERO_FEEDBACK.createdFailed);
       expect(navigateMock).not.toHaveBeenCalled();
       expect(facade.submitting()).toBe(false);
     });
@@ -99,7 +100,7 @@ describe('HeroFormFacade', () => {
       facade.create(hero);
       createSubject.error(new Error('Create failed'));
 
-      expect(facade.error()).toBe('No se pudo crear el heroe.');
+      expect(facade.error()).toBe(HERO_FEEDBACK.createdFailed);
 
       createSubject = new Subject<Hero>();
       createMock.mockReturnValue(createSubject.asObservable());
@@ -146,7 +147,7 @@ describe('HeroFormFacade', () => {
 
       loadSubject.error(new Error('Load failed'));
 
-      expect(facade.error()).toBe('No se pudo cargar el heroe.');
+      expect(facade.error()).toBe(HERO_FEEDBACK.loadHeroFailed);
       expect(facade.loading()).toBe(false);
     });
 
@@ -158,7 +159,7 @@ describe('HeroFormFacade', () => {
       facade.load('999');
       firstSubject.error(new Error('Load failed'));
 
-      expect(facade.error()).toBe('No se pudo cargar el heroe.');
+      expect(facade.error()).toBe(HERO_FEEDBACK.loadHeroFailed);
 
       const secondSubject = new Subject<Hero>();
 
@@ -220,7 +221,7 @@ describe('HeroFormFacade', () => {
 
       updateSubject.error(new Error('Update failed'));
 
-      expect(facade.error()).toBe('No se pudo actualizar el heroe.');
+      expect(facade.error()).toBe(HERO_FEEDBACK.updateFailed);
       expect(navigateMock).not.toHaveBeenCalled();
       expect(facade.submitting()).toBe(false);
     });

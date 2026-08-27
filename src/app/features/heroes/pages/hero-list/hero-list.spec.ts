@@ -12,6 +12,8 @@ import { MatDialog } from '@angular/material/dialog';
 import { ConfirmDeleteDialog } from '../../ui/confirm-delete-dialog/confirm-delete-dialog';
 import { By } from '@angular/platform-browser';
 import { MatPaginator } from '@angular/material/paginator';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { HERO_FEEDBACK } from '../../models/hero-feedback';
 
 describe('HeroList', () => {
   let component: HeroList;
@@ -24,6 +26,7 @@ describe('HeroList', () => {
   const openDialogMock = vi.fn();
   const getAllHeroesMock = vi.fn();
   const searchByNameMock = vi.fn();
+  const snackBarOpenMock = vi.fn();
 
   beforeEach(async () => {
     heroesSubject = new Subject<Hero[]>();
@@ -43,6 +46,7 @@ describe('HeroList', () => {
 
     searchByNameMock.mockReset();
     searchByNameMock.mockReturnValue(heroesSubject.asObservable());
+    snackBarOpenMock.mockReset();
 
     await TestBed.configureTestingModule({
       imports: [HeroList],
@@ -60,6 +64,12 @@ describe('HeroList', () => {
           provide: MatDialog,
           useValue: {
             open: openDialogMock,
+          },
+        },
+        {
+          provide: MatSnackBar,
+          useValue: {
+            open: snackBarOpenMock,
           },
         },
       ],
@@ -111,7 +121,7 @@ describe('HeroList', () => {
       heroesSubject.error(new Error('API error'));
       fixture.detectChanges();
 
-      expect(fixture.nativeElement.textContent).toContain('No se pudieron cargar los heroes.');
+      expect(fixture.nativeElement.textContent).toContain(HERO_FEEDBACK.loadHeroesFailed);
     });
   });
 
@@ -211,17 +221,19 @@ describe('HeroList', () => {
       fixture.detectChanges();
 
       expect(component.deleting()).toBe(false);
-      expect(component.deleteError()).toBe('No se pudo eliminar el heroe.');
-
-      expect(fixture.nativeElement.textContent).toContain('No se pudo eliminar el heroe.');
+      expect(snackBarOpenMock).toHaveBeenCalledExactlyOnceWith(
+        HERO_FEEDBACK.deleteFailed,
+        undefined,
+        { duration: 4000 },
+      );
     });
 
-    it('should clear a previous delete error before retrying', () => {
-      component.onDeleteRequested(HEROES_MOCK[0]);
+    it('should allow retrying after a failed delete', () => {
+      const hero = HEROES_MOCK[0];
+
+      component.onDeleteRequested(hero);
       dialogResultSubject.next(true);
       deleteSubject.error(new Error('Delete failed'));
-
-      expect(component.deleteError()).not.toBeNull();
 
       dialogResultSubject = new Subject<boolean | undefined>();
       deleteSubject = new Subject<void>();
@@ -229,13 +241,13 @@ describe('HeroList', () => {
       openDialogMock.mockReturnValue({
         afterClosed: () => dialogResultSubject.asObservable(),
       });
-
       deleteMock.mockReturnValue(deleteSubject.asObservable());
 
-      component.onDeleteRequested(HEROES_MOCK[0]);
+      component.onDeleteRequested(hero);
       dialogResultSubject.next(true);
 
-      expect(component.deleteError()).toBeNull();
+      expect(deleteMock).toHaveBeenCalledTimes(2);
+      expect(component.deleting()).toBe(true);
     });
   });
 
@@ -329,14 +341,14 @@ describe('HeroList', () => {
 
       await fixture.whenStable();
 
-      const clearButton = fixture.nativeElement.querySelector('[data-testid="clear-search"]') as HTMLButtonElement;
+      const clearButton = fixture.nativeElement.querySelector(
+        '[data-testid="clear-search"]',
+      ) as HTMLButtonElement;
 
       clearButton.click();
 
       expect(component.query()).toBe('');
-    })
-
-
+    });
   });
 
   describe('pagination', () => {
@@ -443,21 +455,7 @@ describe('HeroList', () => {
       const error = fixture.nativeElement.querySelector('[data-testid="error-state"]');
 
       expect(error).not.toBeNull();
-      expect(error.textContent).toContain('No se pudieron cargar los heroes.');
-    });
-
-    it('should show an error when deleting fails', () => {
-      component.onDeleteRequested(HEROES_MOCK[0]);
-
-      dialogResultSubject.next(true);
-      deleteSubject.error(new Error('Delete failed'));
-
-      fixture.detectChanges();
-
-      const error = fixture.nativeElement.querySelector('[data-testid="delete-error"]');
-
-      expect(error).not.toBeNull();
-      expect(error.textContent).toContain('No se pudo eliminar el heroe.');
+      expect(error.textContent).toContain(HERO_FEEDBACK.loadHeroesFailed);
     });
 
     it('should navigate to edit when a hero card requests it', () => {

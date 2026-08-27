@@ -25,6 +25,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmDeleteDialog } from '../../ui/confirm-delete-dialog/confirm-delete-dialog';
 import { MatIconModule } from '@angular/material/icon';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { HERO_FEEDBACK } from '../../models/hero-feedback';
 
 @Component({
   selector: 'app-hero-list',
@@ -45,6 +47,7 @@ export class HeroList {
   private readonly heroService = inject(HeroService);
   private readonly router = inject(Router);
   private readonly dialog = inject(MatDialog);
+  private readonly snackBar = inject(MatSnackBar);
 
   readonly query = signal('');
   readonly page = signal(0);
@@ -65,7 +68,6 @@ export class HeroList {
   readonly refresh = signal(false);
 
   readonly deleting = signal(false);
-  readonly deleteError = signal<string | null>(null);
 
   private readonly refresh$ = toObservable(this.refresh);
   private readonly query$ = toObservable(this.query).pipe(
@@ -98,7 +100,7 @@ export class HeroList {
       map((heroes) => ({ heroes, loading: false, error: null })),
       startWith({ heroes: [], loading: true, error: null }),
       catchError(() =>
-        of({ heroes: [], loading: false, error: 'No se pudieron cargar los heroes.' }),
+        of({ heroes: [], loading: false, error: HERO_FEEDBACK.loadHeroesFailed }),
       ),
     );
   }
@@ -124,17 +126,17 @@ export class HeroList {
         filter((confirmed) => confirmed),
         switchMap(() => {
           this.deleting.set(true);
-          this.deleteError.set(null);
           return this.heroService.delete(hero.id).pipe(finalize(() => this.deleting.set(false)));
         }),
       )
       .subscribe({
         next: () => {
+          this.showFeedback(HERO_FEEDBACK.deleted);
           this.page.set(0);
           this.refresh.update((value) => !value);
         },
         error: () => {
-          this.deleteError.set('No se pudo eliminar el heroe.');
+          this.showFeedback(HERO_FEEDBACK.deleteFailed);
         },
       });
   }
@@ -146,5 +148,11 @@ export class HeroList {
 
   clearSearch(): void {
     this.query.set('');
+  }
+
+  private showFeedback(message: string) {
+    this.snackBar.open(message, undefined, {
+      duration: 4000,
+    });
   }
 }

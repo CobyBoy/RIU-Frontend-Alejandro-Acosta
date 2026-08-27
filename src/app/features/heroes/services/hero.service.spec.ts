@@ -7,6 +7,7 @@ import { provideHttpClient } from '@angular/common/http';
 import { API_URL } from '../../../core/config/api.token';
 import { firstValueFrom } from 'rxjs';
 import { HEROES_MOCK } from '../testing/hero-list.mock';
+import { HERO_FEEDBACK } from '../models/hero-feedback';
 
 describe('Hero', () => {
   let service: HeroService;
@@ -109,7 +110,7 @@ describe('Hero', () => {
 
       const request = httpTesting.expectOne(`${apiUrl}/heroes`);
 
-      request.flush('Create failed', {
+      request.flush(HERO_FEEDBACK.createdFailed, {
         status: 500,
         statusText: 'Internal Server Error',
       });
@@ -152,7 +153,7 @@ describe('Hero', () => {
 
       const request = httpTesting.expectOne(`${apiUrl}/heroes/999`);
 
-      request.flush('Fallo al actualizar el heroe', {
+      request.flush(HERO_FEEDBACK.updateFailed, {
         status: 404,
         statusText: 'Not Found',
       });
@@ -178,7 +179,7 @@ describe('Hero', () => {
       const resultPromise = firstValueFrom(service.delete('999'));
       const request = httpTesting.expectOne(`${apiUrl}/heroes/999`);
 
-      request.flush('Fallo al eliminar el heroe', {
+      request.flush(HERO_FEEDBACK.deleteFailed, {
         status: 404,
         statusText: 'Not Found',
       });

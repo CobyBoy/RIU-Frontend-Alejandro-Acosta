@@ -80,7 +80,7 @@ describe('HeroForm', () => {
     expect(component.form.invalid).toBe(true);
   });
 
-  it('should require a minimum length of two characters', () => {
+  it('should require a minimum length of three characters', () => {
     component.form.controls.name.setValue('A');
     component.form.controls.realName.setValue('B');
 

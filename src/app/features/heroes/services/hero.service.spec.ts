@@ -27,6 +27,10 @@ describe('Hero', () => {
     httpTesting = TestBed.inject(HttpTestingController);
   });
 
+  afterEach(() => {
+    httpTesting.verify();
+  });
+
   it('should be created', () => {
     expect(service).toBeTruthy();
   });
@@ -40,9 +44,10 @@ describe('Hero', () => {
       request.flush(HEROES_MOCK);
 
       await expect(result).resolves.toEqual(HEROES_MOCK);
-      httpTesting.verify();
     });
+  });
 
+  describe('getById', () => {
     it('should request a hero by id', async () => {
       const hero = HEROES_MOCK[0];
       const resultPromise = firstValueFrom(service.getById(hero.id));
@@ -66,8 +71,10 @@ describe('Hero', () => {
         status: 404,
       });
     });
+  });
 
-    it('shoudl create a hero', async () => {
+  describe('create', () => {
+    it('should create a hero', async () => {
       const newHero: CreateHero = {
         name: 'War Machine',
         realName: 'James Rhodes',

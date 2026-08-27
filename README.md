@@ -1,59 +1,93 @@
-# RIUFrontendAlejandroAcosta
+# RIU Frontend - Superheroes
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.2.21.
+Aplicación desarrollada como prueba técnica para la gestión de superhéroes. Desarrollada con Angular 21.2.21.
 
-## Development server
+Permite listar, buscar, crear, editar y eliminar héroes utilizando una API mock con JSON Server.
+## Tecnologías
 
-To start a local development server, run:
+- Angular 21
+- TypeScript
+- Angular Material
+- Tailwind CSS
+- RxJS
+- Signals
+- Vitest
+- JSON Server
+- Docker
+- Nginx
 
-```bash
-ng serve
-```
+## Requisitos
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+Para ejecutar el proyecto localmente:
 
-## Code scaffolding
+- Node.js 22
+- npm
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+Para ejecutarlo con Docker:
 
-```bash
-ng generate component component-name
-```
+- Docker / Docker Desktop
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+## Desarrollo
 
-```bash
-ng generate --help
-```
-
-## Building
-
-To build the project run:
-
-```bash
-ng build
-```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
+Instalar las dependencias:
 
 ```bash
-ng test
+npm install 
 ```
 
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
+Levantar API mock:
 
 ```bash
-ng e2e
+npm run api
 ```
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+Levantar el servidor de desarrollo:
 
-## Additional Resources
+```bash
+npm run start
+```
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+La aplicación se ejecutará en `http://localhost:4200/`.
+
+La API mock se ejecutará en `http://localhost:3000/`.
+
+### Docker
+La aplicación también puede ejecutarse completamente con Docker:
+
+```bash
+docker-compose up --build
+```
+
+La aplicación se ejecutará en `http://localhost:8080/`.
+
+Docker compose levanta:
+-  Angular compilado y servido por Nginx
+-  API mock con JSON Server
+- Nginx utiliza `/api` como reverse proxy hacia JSON Server
+
+### Testing
+Ejecutar los tests unitarios:
+
+```bash
+npm run test
+```
+
+Ejecutar los test con coverage:
+
+```bash
+npm run test:coverage
+```
+
+### Funcionalidades
+
+- Listado de héroes
+- Búsqueda por nombre
+- Paginación
+- Alta de héroes
+- Edición de héroes
+- Eliminación con confirmación
+- Formulario con validación
+- Directiva para transformar el nombre del héroe en mayúsculas
+- Indicador global de loading para operaciones de escritura
+- Manejo de estados de carga y error
+- API mock con JSON Server

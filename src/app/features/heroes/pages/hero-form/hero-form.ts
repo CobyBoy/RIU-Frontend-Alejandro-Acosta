@@ -5,7 +5,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { CreateHero } from '../../models/hero.model';
 import { HeroFormFacade } from '../../services/hero-form.facade';
-import { HeroUppercaseDirective } from '../../directives/hero-uppercase.directive';
+import { HeroUppercaseDirective } from '../../../../shared/directives/hero-uppercase.directive';
 
 @Component({
   selector: 'app-hero-form',

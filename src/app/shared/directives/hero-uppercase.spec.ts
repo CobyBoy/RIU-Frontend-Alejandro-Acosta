@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { TestHost } from '../testing/uppercase-test-host.stub';
+import { TestHost } from '../../features/heroes/testing/uppercase-test-host.stub';
 
 describe('HeroUppercase', () => {
   let fixture: ComponentFixture<TestHost>;

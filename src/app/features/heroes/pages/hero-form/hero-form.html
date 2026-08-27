@@ -22,12 +22,12 @@
       <div class="space-y-5">
         <mat-form-field appearance="outline" class="w-full">
         <mat-label>Nombre</mat-label>
-        <input matInput formControlName="name" required placeholder="WANDA" heroUppercase />
+        <input matInput formControlName="name" placeholder="WANDA" heroUppercase />
 
         @if (form.controls.name.hasError('required')) {
           <mat-error>El nombre es obligatorio.</mat-error>
-        } @else if (form.controls.name.hasError('minLength')) {
-          <mat-error>El nombre debe tener al menos 2 caracteres.</mat-error>
+        } @else if (form.controls.name.hasError('minlength')) {
+          <mat-error>El nombre debe tener al menos 3 caracteres.</mat-error>
         }
       </mat-form-field>
 
@@ -39,7 +39,7 @@
         @if (form.controls.realName.hasError('required')) {
           <mat-error>El nombre real es obligatorio.</mat-error>
         } @else if (form.controls.realName.hasError('minlength')) {
-          <mat-error>El nombre real debe tener al menos 2 caracteres.</mat-error>
+          <mat-error>El nombre real debe tener al menos 3 caracteres.</mat-error>
         }
       </mat-form-field>
 

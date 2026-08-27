@@ -7,9 +7,11 @@ import { HeroService } from '../../services/hero.service';
 import { HEROES_MOCK } from '../../testing/hero-list.mock';
 import { HeroCardStub } from '../../testing/hero-card.stub';
 import { HeroCard } from '../../ui/hero-card/hero-card';
-import { provideRouter } from '@angular/router';
+import { provideRouter, Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmDeleteDialog } from '../../ui/confirm-delete-dialog/confirm-delete-dialog';
+import { By } from '@angular/platform-browser';
+import { MatPaginator } from '@angular/material/paginator';
 
 describe('HeroList', () => {
   let component: HeroList;
@@ -81,34 +83,36 @@ describe('HeroList', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should show loading while heroes are being loaded', () => {
-    expect(fixture.nativeElement.textContent).toContain('Cargando heroes...');
-  });
+  describe('rendering', () => {
+    it('should show loading while heroes are being loaded', () => {
+      expect(fixture.nativeElement.textContent).toContain('Cargando heroes...');
+    });
 
-  it('should render the returned heroes', () => {
-    heroesSubject.next(HEROES_MOCK);
-    fixture.detectChanges();
+    it('should render the returned heroes', () => {
+      heroesSubject.next(HEROES_MOCK);
+      fixture.detectChanges();
 
-    const text = fixture.nativeElement.textContent;
+      const text = fixture.nativeElement.textContent;
 
-    expect(text).toContain('3 heroes encontrados.');
-    expect(text).toContain('Spider-Man');
-    expect(text).toContain('Captain Marvel');
-    expect(text).toContain('Iron Man');
-  });
+      expect(text).toContain('3 heroes encontrados.');
+      expect(text).toContain('Spider-Man');
+      expect(text).toContain('Captain Marvel');
+      expect(text).toContain('Iron Man');
+    });
 
-  it('should show an empty state when no heroes are returned', () => {
-    heroesSubject.next([]);
-    fixture.detectChanges();
+    it('should show an empty state when no heroes are returned', () => {
+      heroesSubject.next([]);
+      fixture.detectChanges();
 
-    expect(fixture.nativeElement.textContent).toContain('No se encontraron heroes.');
-  });
+      expect(fixture.nativeElement.textContent).toContain('No se encontraron heroes.');
+    });
 
-  it('should show an error when loading heroes fails', () => {
-    heroesSubject.error(new Error('API error'));
-    fixture.detectChanges();
+    it('should show an error when loading heroes fails', () => {
+      heroesSubject.error(new Error('API error'));
+      fixture.detectChanges();
 
-    expect(fixture.nativeElement.textContent).toContain('No se pudieron cargar los heroes.');
+      expect(fixture.nativeElement.textContent).toContain('No se pudieron cargar los heroes.');
+    });
   });
 
   describe('delete dialog', () => {
@@ -369,6 +373,123 @@ describe('HeroList', () => {
       deleteSubject.complete();
 
       expect(component.page()).toBe(0);
+    });
+  });
+
+  describe('ui', () => {
+    it('should navigate to the hero edit page', () => {
+      const router = TestBed.inject(Router);
+      const navigateSpy = vi.spyOn(router, 'navigate');
+
+      component.onEditRequested('1');
+
+      expect(navigateSpy).toHaveBeenCalledExactlyOnceWith(['/heroes', '1', 'edit']);
+    });
+
+    it('should show loading state while heroes are loading', () => {
+      const loading = fixture.nativeElement.querySelector('[data-testid="loading-state"]');
+
+      expect(loading).not.toBeNull();
+    });
+
+    it('should show the total number of heroes', () => {
+      heroesSubject.next(HEROES_MOCK);
+      fixture.detectChanges();
+
+      const total = fixture.nativeElement.querySelector('[data-testid="heroes-total"]');
+
+      expect(total.textContent).toContain(`${HEROES_MOCK.length} heroes encontrados.`);
+    });
+
+    it('should render the heroes for the current page', () => {
+      heroesSubject.next(HEROES_MOCK);
+      fixture.detectChanges();
+
+      const cards = fixture.nativeElement.querySelectorAll('[data-testid="hero-card"]');
+
+      expect(cards.length).toBe(Math.min(HEROES_MOCK.length, component.pageSize()));
+    });
+
+    it('should show the empty state when no heroes are returned', () => {
+      heroesSubject.next([]);
+      fixture.detectChanges();
+
+      expect(fixture.nativeElement.querySelector('[data-testid="empty-state"]')).not.toBeNull();
+
+      expect(fixture.nativeElement.querySelector('[data-testid="heroes-grid"]')).toBeNull();
+    });
+
+    it('should show an error when loading heroes fails', () => {
+      heroesSubject.error(new Error('API error'));
+      fixture.detectChanges();
+
+      const error = fixture.nativeElement.querySelector('[data-testid="error-state"]');
+
+      expect(error).not.toBeNull();
+      expect(error.textContent).toContain('No se pudieron cargar los heroes.');
+    });
+
+    it('should show an error when deleting fails', () => {
+      component.onDeleteRequested(HEROES_MOCK[0]);
+
+      dialogResultSubject.next(true);
+      deleteSubject.error(new Error('Delete failed'));
+
+      fixture.detectChanges();
+
+      const error = fixture.nativeElement.querySelector('[data-testid="delete-error"]');
+
+      expect(error).not.toBeNull();
+      expect(error.textContent).toContain('No se pudo eliminar el heroe.');
+    });
+
+    it('should navigate to edit when a hero card requests it', () => {
+      heroesSubject.next(HEROES_MOCK);
+      fixture.detectChanges();
+
+      const router = TestBed.inject(Router);
+      const navigateSpy = vi.spyOn(router, 'navigate');
+
+      const heroCard = fixture.debugElement.query(By.directive(HeroCardStub));
+
+      const stub = heroCard.componentInstance as HeroCardStub;
+
+      stub.editRequested.emit(HEROES_MOCK[0].id);
+
+      expect(navigateSpy).toHaveBeenCalledExactlyOnceWith(['/heroes', HEROES_MOCK[0].id, 'edit']);
+    });
+
+    it('should open the delete dialog when a hero card requests deletion', () => {
+      heroesSubject.next(HEROES_MOCK);
+      fixture.detectChanges();
+
+      const heroCards = fixture.debugElement.queryAll(By.directive(HeroCardStub));
+
+      const firstCard = heroCards[0].componentInstance as HeroCardStub;
+
+      firstCard.deleteRequested.emit(HEROES_MOCK[0]);
+
+      expect(openDialogMock).toHaveBeenCalledExactlyOnceWith(ConfirmDeleteDialog, {
+        data: HEROES_MOCK[0],
+      });
+    });
+
+    it('should update pagination when the paginator emits a page event', () => {
+      heroesSubject.next(HEROES_MOCK);
+      fixture.detectChanges();
+
+      const paginator = fixture.debugElement.query(By.directive(MatPaginator))
+        .componentInstance as MatPaginator;
+
+      paginator.page.emit({
+        pageIndex: 1,
+        previousPageIndex: 0,
+        pageSize: 4,
+        length: HEROES_MOCK.length,
+      });
+
+      expect(component.page()).toBe(1);
+      expect(component.pageSize()).toBe(4);
     });
   });
 });

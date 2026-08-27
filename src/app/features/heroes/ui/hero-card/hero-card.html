@@ -19,8 +19,8 @@
   </mat-card-content>
 
   <mat-card-actions align="end">
-    <button matButton type="button" (click)="onEdit()">Editar</button>
+    <button matButton type="button" (click)="onEdit()" data-testid="edit-hero">Editar</button>
 
-    <button matButton type="button" (click)="onDelete()">Borrar</button>
+    <button matButton type="button" (click)="onDelete()" data-testid="delete-hero">Borrar</button>
   </mat-card-actions>
 </mat-card>

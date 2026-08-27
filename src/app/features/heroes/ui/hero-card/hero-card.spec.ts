@@ -22,4 +22,42 @@ describe('HeroCard', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('should emit the hero id when edit ir requested', () => {
+    const emitSpy = vi.spyOn(component.editRequested, 'emit');
+
+    component.onEdit();
+
+    expect(emitSpy).toHaveBeenCalledExactlyOnceWith(HEROES_MOCK[0].id);
+  });
+
+  it('should emit the hero id when edit ir requested', () => {
+    const emitSpy = vi.spyOn(component.deleteRequested, 'emit');
+
+    component.onDelete();
+
+    expect(emitSpy).toHaveBeenCalledExactlyOnceWith(HEROES_MOCK[0]);
+  });
+
+  describe('ui', () => {
+    it('should emit editRequested when edit button is clicked', () => {
+      const emitSpy = vi.spyOn(component.editRequested, 'emit');
+
+      const editButton = fixture.nativeElement.querySelector('[data-testid="edit-hero"]') as HTMLButtonElement;
+
+      editButton.click();
+
+      expect(emitSpy).toHaveBeenCalledExactlyOnceWith(HEROES_MOCK[0].id);
+    });
+
+    it('should emit deleteRequested when delete button is clicked', () => {
+      const emitSpy = vi.spyOn(component.deleteRequested, 'emit');
+
+      const deleteButton = fixture.nativeElement.querySelector('[data-testid="delete-hero"]') as HTMLButtonElement;
+
+      deleteButton.click();
+
+      expect(emitSpy).toHaveBeenCalledExactlyOnceWith(HEROES_MOCK[0]);
+    });
+  });
 });

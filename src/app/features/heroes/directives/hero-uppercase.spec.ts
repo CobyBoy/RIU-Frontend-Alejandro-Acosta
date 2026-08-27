@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { TestHost } from '../testing/uppercase-test-host';
+import { TestHost } from '../testing/uppercase-test-host.stub';
 
 describe('HeroUppercase', () => {
   let fixture: ComponentFixture<TestHost>;
@@ -28,7 +28,7 @@ describe('HeroUppercase', () => {
     input.dispatchEvent(new Event('input'));
 
     expect(component.control.value).toBe('SPIDER-MAN');
-  })
+  });
 
   it('should keep an already uppercase value unchanged', () => {
     input.value = 'SPIDER-MAN';
@@ -36,9 +36,9 @@ describe('HeroUppercase', () => {
 
     expect(component.control.value).toBe('SPIDER-MAN');
     expect(component.control.value).toBe('SPIDER-MAN');
-  })
+  });
 
-  /* it('should write programmatic values in uppercase to the input', () => {
+  it('should write programmatic values in uppercase to the input', () => {
     component.control.setValue('Spider-Man');
 
     fixture.detectChanges();
@@ -60,7 +60,13 @@ describe('HeroUppercase', () => {
     fixture.detectChanges();
 
     expect(input.disabled).toBe(true);
-  }); */
+  });
 
+  it('should write an empty value when the control value is null', () => {
+    component.control.setValue(null);
 
+    fixture.detectChanges();
+
+    expect(input.value).toBe('');
+  });
 });

@@ -69,6 +69,13 @@
       "realName": "Vision",
       "link": "https://www.marvel.com/characters/vision",
       "imageUrl": "https://cdn.marvel.com/content/2x/013vis_ons_cut_dsk_01_1.webp"
+    },
+    {
+      "name": "WANDA",
+      "realName": "wanda",
+      "link": "",
+      "imageUrl": "wanda",
+      "id": "qxMNwjwc1Fk"
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"

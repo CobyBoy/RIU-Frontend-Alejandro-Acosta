@@ -13,7 +13,7 @@ import { HeroUppercaseDirective } from '../../directives/hero-uppercase.directiv
   templateUrl: './hero-form.html',
   styleUrl: './hero-form.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [HeroFormFacade],
+  providers: [HeroFormFacade]
 })
 export class HeroForm {
   private readonly formBuilder = inject(FormBuilder);
@@ -24,7 +24,7 @@ export class HeroForm {
     name: ['', [Validators.required, Validators.minLength(3)]],
     realName: ['', [Validators.required, Validators.minLength(3)]],
     imageUrl: ['', [Validators.required]],
-    link: [''],
+    link: ['']
   });
 
   constructor() {

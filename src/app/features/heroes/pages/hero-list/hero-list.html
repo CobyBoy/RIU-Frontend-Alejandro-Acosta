@@ -10,26 +10,28 @@
         placeholder="Buscar"
         [value]="query()"
         (input)="onSearch($event)"
+        data-testid="hero-search"
       />
     </mat-form-field>
-    <a matButton="filled" class="block" routerLink="/heroes/new"> Añadir </a>
+    <a matButton="filled" class="block" routerLink="/heroes/new" data-testid="add-hero"> Añadir </a>
   </div>
 
   @if (loading()) {
-    <p>Cargando heroes...</p>
+    <p data-testid="loading-state">Cargando heroes...</p>
   } @else if (error()) {
-    <p>{{ error() }}</p>
+    <p data-testid="error-state">{{ error() }}</p>
   } @else if (heores().length === 0) {
-    <p>No se encontraron heroes.</p>
+    <p data-testid="empty-state">No se encontraron heroes.</p>
   } @else {
-    <h2 class="text-lg font-semibold my-4">{{ totalHeroes() }} heroes encontrados.</h2>
+    <h2 class="text-lg font-semibold my-4" data-testid="heroes-total">{{ totalHeroes() }} heroes encontrados.</h2>
 
-    <div class="grid grid-cols-2 gap-4">
+    <div class="grid grid-cols-2 gap-4" data-testid="heroes-grid">
       @for (hero of pagedHeroes(); track hero.id) {
       <app-hero-card
         [hero]="hero"
         (editRequested)="onEditRequested($event)"
         (deleteRequested)="onDeleteRequested($event)"
+        data-testid="hero-card"
       ></app-hero-card>
     }
     </div>
@@ -40,10 +42,11 @@
         [pageSizeOptions]="pageSizeOptions"
         (page)="onPageChange($event)"
         aria-label="Seleccionar página de héroes"
+        data-testid="hero-paginator"
       ></mat-paginator>
   }
   @if (deleteError()) {
-    <p role="alert">
+    <p role="alert" data-testid="delete-error">
       {{ deleteError() }}
     </p>
   }

@@ -51,31 +51,45 @@ describe('loadingInterceptor', () => {
     expect(interceptor).toBeTruthy();
   });
 
-  it('should start loading when the request starts', () => {
+  it('should not start loading when it is a GET request', () => {
     http.get('/api/heroes').subscribe();
 
     const request = httpTesting.expectOne('/api/heroes');
 
-    expect(loadingService.isLoading()).toBe(true);
+    expect(loadingService.isLoading()).toBe(false);
     request.flush([]);
   });
 
-  it('should stop loading after a successful request', () => {
-    http.get('/test').subscribe();
+  it('should start loading when a mutation request starts', () => {
+    http.post('/api/heroes', {}).subscribe();
+
+    const request = httpTesting.expectOne('/api/heroes');
+
+    expect(loadingService.isLoading()).toBe(true);
+
+    request.flush({});
+  });
+
+  it('should stop loading after a successful mutation request', () => {
+    http.patch('/test', {}).subscribe();
 
     const request = httpTesting.expectOne('/test');
+
+    expect(loadingService.isLoading()).toBe(true);
 
     request.flush({});
 
     expect(loadingService.isLoading()).toBe(false);
   });
 
-  it('should stop loading after a failed request', () => {
-    http.get('/test').subscribe({
+  it('should stop loading after a failed mutation request', () => {
+    http.delete('/api/heroes/1').subscribe({
       error: () => {},
     });
 
-    const request = httpTesting.expectOne('/test');
+    const request = httpTesting.expectOne('/api/heroes/1');
+
+    expect(loadingService.isLoading()).toBe(true);
 
     request.flush('Server error', {
       status: 500,

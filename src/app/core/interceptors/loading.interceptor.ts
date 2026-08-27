@@ -3,7 +3,13 @@ import { inject } from '@angular/core';
 import { LoadingService } from '../services/loading.service';
 import { finalize } from 'rxjs';
 
+const mutationMethods = ['POST', 'PUT', 'PATCH', 'DELETE'];
+
 export const loadingInterceptor: HttpInterceptorFn = (req, next) => {
+  if (!mutationMethods.includes(req.method)) {
+    return next(req);
+  }
+
   const loadingService = inject(LoadingService);
 
   loadingService.start();

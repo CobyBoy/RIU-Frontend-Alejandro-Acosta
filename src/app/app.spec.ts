@@ -30,18 +30,18 @@ describe('App', () => {
   });
 
   it('should not show the loading indicator initially', () => {
-    const progressBar = fixture.nativeElement.querySelector('mat-progress-bar');
+    const spinner = fixture.nativeElement.querySelector('mat-spinner');
 
-    expect(progressBar).toBeNull();
+    expect(spinner).toBeNull();
   });
 
   it('should show the loading indicator while loading', () => {
     isLoading.set(true);
     fixture.detectChanges();
 
-    const progressBar = fixture.nativeElement.querySelector('mat-progress-bar');
+    const spinner = fixture.nativeElement.querySelector('mat-spinner');
 
-    expect(progressBar).not.toBeNull();
+    expect(spinner).not.toBeNull();
   });
 
   it('should hide the loading indicator when loading finishes', () => {
@@ -51,8 +51,8 @@ describe('App', () => {
     isLoading.set(false);
     fixture.detectChanges();
 
-    const progressBar = fixture.nativeElement.querySelector('mat-progress-bar');
+    const spinner = fixture.nativeElement.querySelector('mat-spinner');
 
-    expect(progressBar).toBeNull();
+    expect(spinner).toBeNull();
   });
 });

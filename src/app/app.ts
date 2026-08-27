@@ -1,11 +1,11 @@
 import { Component, inject, signal } from '@angular/core';
-import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { RouterOutlet } from '@angular/router';
 import { LoadingService } from './core/services/loading.service';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, MatProgressBarModule],
+  imports: [RouterOutlet, MatProgressSpinnerModule],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })

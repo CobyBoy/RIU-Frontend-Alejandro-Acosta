@@ -54,14 +54,14 @@ export class HeroList {
   readonly pagedHeroes = computed(() => {
     const start = this.page() * this.pageSize();
     const end = start + this.pageSize();
-    return this.heores().slice(start, end);
+    return this.heroes().slice(start, end);
   });
 
-  readonly heores = computed(() => this.state().heroes);
+  readonly heroes = computed(() => this.state().heroes);
   readonly loading = computed(() => this.state().loading);
   readonly error = computed(() => this.state().error);
 
-  readonly totalHeroes = computed(() => this.heores().length);
+  readonly totalHeroes = computed(() => this.heroes().length);
   readonly refresh = signal(false);
 
   readonly deleting = signal(false);

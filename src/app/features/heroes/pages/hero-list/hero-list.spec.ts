@@ -320,6 +320,23 @@ describe('HeroList', () => {
 
       expect(component.page()).toBe(0);
     });
+
+    it('should clear the search query when clicking on the clear button', async () => {
+      const input = fixture.nativeElement.querySelector('input[type="search"]') as HTMLInputElement;
+
+      input.value = 'man';
+      input.dispatchEvent(new Event('input'));
+
+      await fixture.whenStable();
+
+      const clearButton = fixture.nativeElement.querySelector('[data-testid="clear-search"]') as HTMLButtonElement;
+
+      clearButton.click();
+
+      expect(component.query()).toBe('');
+    })
+
+
   });
 
   describe('pagination', () => {

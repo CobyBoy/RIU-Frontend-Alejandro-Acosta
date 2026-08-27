@@ -24,6 +24,7 @@ import { Router, RouterLink } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmDeleteDialog } from '../../ui/confirm-delete-dialog/confirm-delete-dialog';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-hero-list',
@@ -33,7 +34,8 @@ import { ConfirmDeleteDialog } from '../../ui/confirm-delete-dialog/confirm-dele
     HeroCard,
     MatPaginatorModule,
     RouterLink,
-    MatButtonModule
+    MatButtonModule,
+    MatIconModule,
   ],
   templateUrl: './hero-list.html',
   styleUrl: './hero-list.css',
@@ -89,13 +91,15 @@ export class HeroList {
     },
   );
 
-  private loadHeroes(request$: Observable<Hero[]>): Observable<{ heroes: Hero[]; loading: boolean; error: string | null }> {
+  private loadHeroes(
+    request$: Observable<Hero[]>,
+  ): Observable<{ heroes: Hero[]; loading: boolean; error: string | null }> {
     return request$.pipe(
       map((heroes) => ({ heroes, loading: false, error: null })),
       startWith({ heroes: [], loading: true, error: null }),
       catchError(() =>
         of({ heroes: [], loading: false, error: 'No se pudieron cargar los heroes.' }),
-      )
+      ),
     );
   }
 
@@ -125,13 +129,22 @@ export class HeroList {
         }),
       )
       .subscribe({
-        next: () => { this.page.set(0); this.refresh.update((value) => !value); },
-        error: () => { this.deleteError.set('No se pudo eliminar el heroe.'); },
+        next: () => {
+          this.page.set(0);
+          this.refresh.update((value) => !value);
+        },
+        error: () => {
+          this.deleteError.set('No se pudo eliminar el heroe.');
+        },
       });
   }
 
   onPageChange(event: PageEvent) {
     this.page.set(event.pageIndex);
     this.pageSize.set(event.pageSize);
+  }
+
+  clearSearch(): void {
+    this.query.set('');
   }
 }

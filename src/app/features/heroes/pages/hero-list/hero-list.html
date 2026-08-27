@@ -12,6 +12,17 @@
         (input)="onSearch($event)"
         data-testid="hero-search"
       />
+      @if (query()) {
+        <button
+          matSuffix
+          matIconButton
+          aria-label="Clear"
+          (click)="clearSearch()"
+          data-testid="clear-search"
+        >
+          <mat-icon>close</mat-icon>
+        </button>
+      }
     </mat-form-field>
     <a matButton="filled" class="block" routerLink="/heroes/new" data-testid="add-hero"> Añadir </a>
   </div>

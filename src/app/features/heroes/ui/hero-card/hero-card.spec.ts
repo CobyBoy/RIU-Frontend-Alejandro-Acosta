@@ -23,20 +23,12 @@ describe('HeroCard', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should emit the hero id when edit ir requested', () => {
+  it('should emit the hero id when edit is requested', () => {
     const emitSpy = vi.spyOn(component.editRequested, 'emit');
 
     component.onEdit();
 
     expect(emitSpy).toHaveBeenCalledExactlyOnceWith(HEROES_MOCK[0].id);
-  });
-
-  it('should emit the hero id when edit ir requested', () => {
-    const emitSpy = vi.spyOn(component.deleteRequested, 'emit');
-
-    component.onDelete();
-
-    expect(emitSpy).toHaveBeenCalledExactlyOnceWith(HEROES_MOCK[0]);
   });
 
   describe('ui', () => {

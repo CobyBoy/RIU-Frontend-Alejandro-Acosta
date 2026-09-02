@@ -17,7 +17,6 @@ import { HeroUppercaseDirective } from '../../../../shared/directives/hero-upper
     HeroUppercaseDirective,
   ],
   templateUrl: './hero-form.html',
-  styleUrl: './hero-form.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [HeroFormFacade],
 })

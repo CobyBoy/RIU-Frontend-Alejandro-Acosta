@@ -8,7 +8,6 @@ import { NgOptimizedImage } from '@angular/common';
   selector: 'app-hero-card',
   imports: [MatButtonModule, MatCardModule, NgOptimizedImage],
   templateUrl: './hero-card.html',
-  styleUrl: './hero-card.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HeroCard {

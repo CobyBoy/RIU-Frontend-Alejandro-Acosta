@@ -39,7 +39,6 @@ import { HERO_FEEDBACK } from '../../models/hero-feedback';
     MatIconModule,
   ],
   templateUrl: './hero-list.html',
-  styleUrl: './hero-list.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HeroList {

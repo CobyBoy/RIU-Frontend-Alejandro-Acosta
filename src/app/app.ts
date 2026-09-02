@@ -6,8 +6,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 @Component({
   selector: 'app-root',
   imports: [RouterOutlet, MatProgressSpinnerModule],
-  templateUrl: './app.html',
-  styleUrl: './app.css'
+  templateUrl: './app.html'
 })
 export class App {
   readonly loadingService = inject(LoadingService);

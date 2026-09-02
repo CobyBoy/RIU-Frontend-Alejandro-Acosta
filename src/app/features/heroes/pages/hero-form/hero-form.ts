@@ -6,7 +6,7 @@ import { MatInputModule } from '@angular/material/input';
 import { CreateHero } from '../../models/hero.model';
 import { HeroFormFacade } from '../../services/hero-form.facade';
 import { HeroUppercaseDirective } from '../../../../shared/directives/hero-uppercase.directive';
-import { map, of } from 'rxjs';
+import { map } from 'rxjs';
 
 @Component({
   selector: 'app-hero-form',
@@ -19,7 +19,7 @@ import { map, of } from 'rxjs';
   ],
   templateUrl: './hero-form.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [HeroFormFacade],
+  providers: [HeroFormFacade]
 })
 export class HeroForm {
   private readonly _formBuilder = inject(FormBuilder);
@@ -28,10 +28,6 @@ export class HeroForm {
 
   private readonly _uniqueNameValidator: AsyncValidatorFn = (control) => {
     const heroName = (control.value as string).trim();
-
-    if (heroName.length < 3) {
-      return of(null);
-    }
 
     return this.facade
       .isNameTaken(heroName, this.id())

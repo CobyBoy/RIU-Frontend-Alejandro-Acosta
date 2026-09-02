@@ -352,15 +352,25 @@ describe('HeroList', () => {
   });
 
   describe('pagination', () => {
+    const PAGINATION_HEROES: Hero[] = Array.from({ length: 11 }, (_, index) => ({
+      ...HEROES_MOCK[0],
+      id: String(index + 1),
+      name: `Hero ${index + 1}`,
+    }));
+    
     it('should paginate heroes', () => {
-      heroesSubject.next(HEROES_MOCK);
+      heroesSubject.next(PAGINATION_HEROES);
       fixture.detectChanges();
 
-      expect(component.pagedHeroes()).toEqual(HEROES_MOCK.slice(0, 5));
+      expect(component.pagedHeroes()).toEqual(PAGINATION_HEROES.slice(0, 4));
 
       component.page.set(1);
 
-      expect(component.pagedHeroes()).toEqual(HEROES_MOCK.slice(5, 10));
+      expect(component.pagedHeroes()).toEqual(PAGINATION_HEROES.slice(4, 8));
+
+      component.page.set(2);
+
+      expect(component.pagedHeroes()).toEqual(PAGINATION_HEROES.slice(8, 11));
     });
 
     it('should update the current page', () => {

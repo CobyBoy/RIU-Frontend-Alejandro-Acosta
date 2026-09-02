@@ -16,8 +16,8 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
   ],
 })
 export class HeroUppercaseDirective implements ControlValueAccessor {
-  private readonly renderer = inject(Renderer2);
-  private readonly elementRef = inject(ElementRef<HTMLInputElement>);
+  private readonly _renderer = inject(Renderer2);
+  private readonly _elementRef = inject(ElementRef<HTMLInputElement>);
 
   private onChange: (value: string) => void = () => {};
   private onTouched: () => void = () => {};
@@ -26,7 +26,7 @@ export class HeroUppercaseDirective implements ControlValueAccessor {
   writeValue(value: string | null): void {
     const uppercaseValue = value?.toUpperCase() ?? '';
 
-    this.renderer.setProperty(this.elementRef.nativeElement, 'value', uppercaseValue);
+    this._renderer.setProperty(this._elementRef.nativeElement, 'value', uppercaseValue);
   }
   registerOnChange(fn: (value: string) => void): void {
     this.onChange = fn;
@@ -35,13 +35,13 @@ export class HeroUppercaseDirective implements ControlValueAccessor {
     this.onTouched = fn;
   }
   setDisabledState?(isDisabled: boolean): void {
-    this.renderer.setProperty(this.elementRef.nativeElement, 'disabled', isDisabled);
+    this._renderer.setProperty(this._elementRef.nativeElement, 'disabled', isDisabled);
   }
 
   onInput(event: Event): void {
     const input = event.target as HTMLInputElement;
     const uppercaseValue = input.value.toUpperCase();
-    this.renderer.setProperty(input, 'value', uppercaseValue);
+    this._renderer.setProperty(input, 'value', uppercaseValue);
     this.onChange(uppercaseValue);
   }
 

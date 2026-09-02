@@ -4,15 +4,15 @@ import { computed, Injectable, signal } from '@angular/core';
   providedIn: 'root',
 })
 export class LoadingService {
-  private readonly pendingRequests = signal(0);
+  private readonly _pendingRequests = signal(0);
 
-  readonly isLoading = computed(() => this.pendingRequests() > 0);
+  readonly isLoading = computed(() => this._pendingRequests() > 0);
 
   start(): void {
-    this.pendingRequests.update((value) => value + 1);
+    this._pendingRequests.update((value) => value + 1);
   }
 
   stop(): void {
-    this.pendingRequests.update((value) => Math.max(0, value - 1));
+    this._pendingRequests.update((value) => Math.max(0, value - 1));
   }
 }

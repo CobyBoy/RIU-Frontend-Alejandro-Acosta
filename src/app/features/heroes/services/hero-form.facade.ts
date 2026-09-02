@@ -9,10 +9,10 @@ import { HERO_FEEDBACK } from '../models/hero-feedback';
 
 @Injectable()
 export class HeroFormFacade {
-  private readonly heroService = inject(HeroService);
-  private readonly router = inject(Router);
-  private readonly destroyRef = inject(DestroyRef);
-  private readonly snackBar = inject(MatSnackBar);
+  private readonly _heroService = inject(HeroService);
+  private readonly _router = inject(Router);
+  private readonly _destroyRef = inject(DestroyRef);
+  private readonly _snackBar = inject(MatSnackBar);
 
   readonly submitting = signal(false);
   readonly error = signal<string | null>(null);
@@ -25,10 +25,10 @@ export class HeroFormFacade {
     this.submitting.set(true);
     this.submitError.set(null);
 
-    this.heroService
+    this._heroService
       .create(hero)
       .pipe(
-        takeUntilDestroyed(this.destroyRef),
+        takeUntilDestroyed(this._destroyRef),
         finalize(() => this.submitting.set(false)),
       )
       .subscribe({
@@ -43,10 +43,10 @@ export class HeroFormFacade {
     this.loading.set(true);
     this.error.set(null);
 
-    this.heroService
+    this._heroService
       .getById(id)
       .pipe(
-        takeUntilDestroyed(this.destroyRef),
+        takeUntilDestroyed(this._destroyRef),
         finalize(() => this.loading.set(false)),
       )
       .subscribe({
@@ -63,10 +63,10 @@ export class HeroFormFacade {
     this.submitting.set(true);
     this.submitError.set(null);
 
-    this.heroService
+    this._heroService
       .update(id, changes)
       .pipe(
-        takeUntilDestroyed(this.destroyRef),
+        takeUntilDestroyed(this._destroyRef),
         finalize(() => this.submitting.set(false)),
       )
       .subscribe({
@@ -79,14 +79,14 @@ export class HeroFormFacade {
 
   private onSuccess(message: string) {
     return () => {
-      this.snackBar.open(message, undefined, {
+      this._snackBar.open(message, undefined, {
         duration: 4000,
       });
-      void this.router.navigate(['/heroes']);
+      void this._router.navigate(['/heroes']);
     };
   }
 
   cancel(): void {
-    this.router.navigate(['/heroes']);
+    this._router.navigate(['/heroes']);
   }
 }

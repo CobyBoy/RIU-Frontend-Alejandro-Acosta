@@ -44,10 +44,10 @@ import { HERO_FEEDBACK } from '../../models/hero-feedback';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HeroList {
-  private readonly heroService = inject(HeroService);
-  private readonly router = inject(Router);
-  private readonly dialog = inject(MatDialog);
-  private readonly snackBar = inject(MatSnackBar);
+  private readonly _heroService = inject(HeroService);
+  private readonly _router = inject(Router);
+  private readonly _dialog = inject(MatDialog);
+  private readonly _snackBar = inject(MatSnackBar);
 
   readonly query = signal('');
   readonly page = signal(0);
@@ -60,27 +60,27 @@ export class HeroList {
     return this.heroes().slice(start, end);
   });
 
-  readonly heroes = computed(() => this.state().heroes);
-  readonly loading = computed(() => this.state().loading);
-  readonly error = computed(() => this.state().error);
+  readonly heroes = computed(() => this._state().heroes);
+  readonly loading = computed(() => this._state().loading);
+  readonly error = computed(() => this._state().error);
 
   readonly totalHeroes = computed(() => this.heroes().length);
   readonly refresh = signal(false);
 
   readonly deleting = signal(false);
 
-  private readonly refresh$ = toObservable(this.refresh);
-  private readonly query$ = toObservable(this.query).pipe(
+  private readonly _refresh$ = toObservable(this.refresh);
+  private readonly _query$ = toObservable(this.query).pipe(
     map((query) => query.trim()),
     distinctUntilChanged(),
     debounce((query) => (query ? timer(300) : of(0))),
   );
 
-  private readonly state = toSignal(
-    combineLatest([this.query$, this.refresh$]).pipe(
+  private readonly _state = toSignal(
+    combineLatest([this._query$, this._refresh$]).pipe(
       switchMap(([query]) =>
         this.loadHeroes(
-          query ? this.heroService.searchByName(query) : this.heroService.getAllHeroes(),
+          query ? this._heroService.searchByName(query) : this._heroService.getAllHeroes(),
         ),
       ),
     ),
@@ -112,11 +112,11 @@ export class HeroList {
   }
 
   onEditRequested(id: string): void {
-    this.router.navigate(['/heroes', id, 'edit']);
+    this._router.navigate(['/heroes', id, 'edit']);
   }
 
   onDeleteRequested(hero: Hero): void {
-    const dialogRef = this.dialog.open(ConfirmDeleteDialog, {
+    const dialogRef = this._dialog.open(ConfirmDeleteDialog, {
       data: hero,
     });
 
@@ -126,7 +126,7 @@ export class HeroList {
         filter((confirmed) => confirmed),
         switchMap(() => {
           this.deleting.set(true);
-          return this.heroService.delete(hero.id).pipe(finalize(() => this.deleting.set(false)));
+          return this._heroService.delete(hero.id).pipe(finalize(() => this.deleting.set(false)));
         }),
       )
       .subscribe({
@@ -151,7 +151,7 @@ export class HeroList {
   }
 
   private showFeedback(message: string) {
-    this.snackBar.open(message, undefined, {
+    this._snackBar.open(message, undefined, {
       duration: 4000,
     });
   }

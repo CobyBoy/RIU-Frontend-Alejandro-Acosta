@@ -8,27 +8,27 @@ import { map, Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class HeroService {
-  private readonly httpClient = inject(HttpClient);
-  private readonly apiUrl = `${inject(API_URL)}/heroes`;
+  private readonly _httpClient = inject(HttpClient);
+  private readonly _apiUrl = `${inject(API_URL)}/heroes`;
 
   getAllHeroes(): Observable<Hero[]> {
-    return this.httpClient.get<Hero[]>(this.apiUrl);
+    return this._httpClient.get<Hero[]>(this._apiUrl);
   }
 
   getById(id: string): Observable<Hero> {
-    return this.httpClient.get<Hero>(`${this.apiUrl}/${id}`);
+    return this._httpClient.get<Hero>(`${this._apiUrl}/${id}`);
   }
 
   create(hero: CreateHero): Observable<Hero> {
-    return this.httpClient.post<Hero>(`${this.apiUrl}`, hero);
+    return this._httpClient.post<Hero>(`${this._apiUrl}`, hero);
   }
 
   update(id: string, updatedHero: UpdateHero): Observable<Hero> {
-    return this.httpClient.patch<Hero>(`${this.apiUrl}/${id}`, updatedHero);
+    return this._httpClient.patch<Hero>(`${this._apiUrl}/${id}`, updatedHero);
   }
 
   delete(id: string): Observable<void> {
-    return this.httpClient.delete<void>(`${this.apiUrl}/${id}`);
+    return this._httpClient.delete<void>(`${this._apiUrl}/${id}`);
   }
 
   searchByName(query: string): Observable<Hero[]> {

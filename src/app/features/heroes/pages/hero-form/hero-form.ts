@@ -22,11 +22,11 @@ import { HeroUppercaseDirective } from '../../../../shared/directives/hero-upper
   providers: [HeroFormFacade],
 })
 export class HeroForm {
-  private readonly formBuilder = inject(FormBuilder);
+  private readonly _formBuilder = inject(FormBuilder);
   readonly facade = inject(HeroFormFacade);
   readonly id = input<string>();
 
-  readonly form = this.formBuilder.nonNullable.group({
+  readonly form = this._formBuilder.nonNullable.group({
     name: ['', [Validators.required, Validators.minLength(3)]],
     realName: ['', [Validators.required, Validators.minLength(3)]],
     imageUrl: ['', [Validators.required]],

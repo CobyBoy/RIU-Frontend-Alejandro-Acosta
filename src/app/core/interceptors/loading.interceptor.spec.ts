@@ -83,8 +83,10 @@ describe('loadingInterceptor', () => {
   });
 
   it('should stop loading after a failed mutation request', () => {
+    const errorSpy = vi.fn();
+
     http.delete('/api/heroes/1').subscribe({
-      error: () => {},
+      error: errorSpy,
     });
 
     const request = httpTesting.expectOne('/api/heroes/1');
@@ -95,7 +97,8 @@ describe('loadingInterceptor', () => {
       status: 500,
       statusText: 'Internal Server Error',
     });
-
+    
+    expect(errorSpy).toHaveBeenCalledOnce();
     expect(loadingService.isLoading()).toBe(false);
   });
 });

@@ -7,7 +7,6 @@ import {
   debounce,
   distinctUntilChanged,
   filter,
-  finalize,
   map,
   Observable,
   of,

@@ -4,7 +4,7 @@ import { HeroUppercaseDirective } from '../../../shared/directives/hero-uppercas
 
 @Component({
   imports: [ReactiveFormsModule, HeroUppercaseDirective],
-  template: ` <input heroUppercase [formControl]="control" /> `,
+  template: ` <input appHeroUppercase [formControl]="control" /> `,
 })
 export class TestHost {
   readonly control = new FormControl<string | null>('');

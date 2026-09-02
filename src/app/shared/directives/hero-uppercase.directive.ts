@@ -2,7 +2,7 @@ import { Directive, ElementRef, inject, Renderer2 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 @Directive({
-  selector: 'input[heroUppercase]',
+  selector: 'input[appHeroUppercase]',
   host: {
     '(input)': 'onInput($event)',
     '(blur)': 'onBlur()',
@@ -19,10 +19,9 @@ export class HeroUppercaseDirective implements ControlValueAccessor {
   private readonly _renderer = inject(Renderer2);
   private readonly _elementRef = inject(ElementRef<HTMLInputElement>);
 
-  private onChange: (value: string) => void = () => {};
-  private onTouched: () => void = () => {};
+  private onChange?: (value: string) => void;
+  private onTouched?: () => void;
 
-  constructor() {}
   writeValue(value: string | null): void {
     const uppercaseValue = value?.toUpperCase() ?? '';
 
@@ -49,10 +48,10 @@ export class HeroUppercaseDirective implements ControlValueAccessor {
     if (selectionStart !== null && selectionEnd !== null) {
       input.setSelectionRange(selectionStart, selectionEnd, selectionDirection ?? undefined);
     }
-    this.onChange(uppercaseValue);
+    this.onChange?.(uppercaseValue);
   }
 
   onBlur(): void {
-    this.onTouched();
+    this.onTouched?.();
   }
 }

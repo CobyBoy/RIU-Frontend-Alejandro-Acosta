@@ -4,6 +4,7 @@ import { HeroForm } from './hero-form';
 import { signal } from '@angular/core';
 import { HeroFormFacade } from '../../services/hero-form.facade';
 import { Hero } from '../../models/hero.model';
+import { of } from 'rxjs';
 
 describe('HeroForm', () => {
   let component: HeroForm;
@@ -13,6 +14,7 @@ describe('HeroForm', () => {
   const cancelMock = vi.fn();
   const updateMock = vi.fn();
   const loadMock = vi.fn();
+  const isNameTakenMock = vi.fn();
 
   const facadeMock = {
     hero: signal<Hero | null>(null),
@@ -24,6 +26,7 @@ describe('HeroForm', () => {
     cancel: cancelMock,
     update: updateMock,
     load: loadMock,
+    isNameTaken: isNameTakenMock,
   };
 
   beforeEach(async () => {
@@ -31,6 +34,8 @@ describe('HeroForm', () => {
     cancelMock.mockReset();
     updateMock.mockReset();
     loadMock.mockReset();
+    isNameTakenMock.mockReset();
+    isNameTakenMock.mockReturnValue(of(false));
     facadeMock.submitting.set(false);
     facadeMock.error.set(null);
     facadeMock.submitError.set(null);
@@ -188,6 +193,21 @@ describe('HeroForm', () => {
         link: 'https://example.com/spider-man',
       });
     });
+
+    it('should reject a duplicate hero name when creating', async () => {
+      isNameTakenMock.mockReturnValue(of(true));
+
+      component.form.controls.name.setValue(' spider-man ');
+      component.form.controls.name.updateValueAndValidity();
+
+      await fixture.whenStable();
+
+      expect(component.form.controls.name.hasError('nameDuplicated')).toBe(true);
+
+      component.onSubmit();
+
+      expect(createMock).not.toHaveBeenCalled();
+    });
   });
 
   describe('edit mode', () => {
@@ -257,6 +277,19 @@ describe('HeroForm', () => {
       fixture.detectChanges();
 
       expect(fixture.nativeElement.textContent).toContain('Cargando heroe...');
+    });
+
+    it('should allow keeping the current hero name when editing', async () => {
+      fixture.componentRef.setInput('id', '1');
+      fixture.detectChanges();
+
+      component.form.controls.name.setValue('Spider-Man');
+      component.form.controls.name.updateValueAndValidity();
+
+      await fixture.whenStable();
+
+      expect(isNameTakenMock).toHaveBeenCalledWith('Spider-Man', '1');
+      expect(component.form.controls.name.hasError('nameDuplicated')).toBe(false);
     });
   });
 });

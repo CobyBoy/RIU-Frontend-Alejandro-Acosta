@@ -3,7 +3,7 @@ import { TestBed } from '@angular/core/testing';
 import { HeroFormFacade } from './hero-form.facade';
 import { Router } from '@angular/router';
 import { HeroService } from './hero.service';
-import { Subject } from 'rxjs';
+import { firstValueFrom, of, Subject } from 'rxjs';
 import { CreateHero, Hero, UpdateHero } from '../models/hero.model';
 import { HEROES_MOCK } from '../testing/hero-list.mock';
 import { HERO_FEEDBACK } from '../models/hero-feedback';
@@ -16,6 +16,7 @@ describe('HeroFormFacade', () => {
   const navigateMock = vi.fn();
   const getByIdMock = vi.fn();
   const updateMock = vi.fn();
+  const getAllHeroesMock = vi.fn();
 
   const hero: CreateHero = {
     name: 'Spider-Man',
@@ -32,6 +33,7 @@ describe('HeroFormFacade', () => {
     navigateMock.mockResolvedValue(true);
     getByIdMock.mockReset();
     updateMock.mockReset();
+    getAllHeroesMock.mockReset();
 
     TestBed.configureTestingModule({
       providers: [
@@ -42,6 +44,7 @@ describe('HeroFormFacade', () => {
             create: createMock,
             getById: getByIdMock,
             update: updateMock,
+            getAllHeroes: getAllHeroesMock,
           },
         },
         {
@@ -225,5 +228,21 @@ describe('HeroFormFacade', () => {
       expect(navigateMock).not.toHaveBeenCalled();
       expect(facade.submitting()).toBe(false);
     });
+  });
+
+  it('should identify duplicate names', async () => {
+    getAllHeroesMock.mockReturnValue(of(HEROES_MOCK));
+
+    const result = await firstValueFrom(facade.isNameTaken(' spider-man '));
+
+    expect(result).toBe(true);
+  });
+
+  it('should allow the current hero name when it is excluded in edit mode', async () => {
+    getAllHeroesMock.mockReturnValue(of(HEROES_MOCK));
+
+    const result = await firstValueFrom(facade.isNameTaken('Spider-Man', HEROES_MOCK[0].id));
+
+    expect(result).toBe(false);
   });
 });

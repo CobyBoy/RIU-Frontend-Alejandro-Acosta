@@ -2,7 +2,7 @@ import { DestroyRef, inject, Injectable, signal } from '@angular/core';
 import { HeroService } from './hero.service';
 import { Router } from '@angular/router';
 import { CreateHero, Hero, UpdateHero } from '../models/hero.model';
-import { finalize } from 'rxjs';
+import { finalize, map, Observable } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { HERO_FEEDBACK } from '../models/hero-feedback';
@@ -88,5 +88,16 @@ export class HeroFormFacade {
 
   cancel(): void {
     this._router.navigate(['/heroes']);
+  }
+
+  isNameTaken(name: string, id?: string): Observable<boolean> {
+    const normalizedName = name.trim().toLowerCase();
+
+    return this._heroService
+      .getAllHeroes()
+      .pipe(
+        takeUntilDestroyed(this._destroyRef),
+        map((heroes) => heroes.some((hero) => hero.id !== id && hero.name.trim().toLowerCase() === normalizedName)),
+      );
   }
 }

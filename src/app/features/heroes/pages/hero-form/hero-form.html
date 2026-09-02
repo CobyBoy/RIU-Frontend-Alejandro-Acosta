@@ -11,63 +11,71 @@
   } @else if (facade.error()) {
     <div class="rounded-xl border border-red-200 bg-red-50 px-6 py-5">
       <p class="text-sm font-medium text-red-800" role="alert">
-      {{ facade.error() }}
-    </p>
+        {{ facade.error() }}
+      </p>
     </div>
   } @else {
-    <form class="w-full rounded-xl border border-slate-200 p-5 shadow-sm sm:p-7 max-w-md" 
-      [formGroup]="form" 
+    <form
+      class="w-full rounded-xl border border-slate-200 p-5 shadow-sm sm:p-7 max-w-md"
+      [formGroup]="form"
       (ngSubmit)="onSubmit()"
-      >
+    >
       <div class="space-y-5">
         <mat-form-field appearance="outline" class="w-full">
-        <mat-label>Nombre</mat-label>
-        <input matInput formControlName="name" placeholder="WANDA" heroUppercase />
+          <mat-label>Nombre</mat-label>
+          <input matInput formControlName="name" placeholder="WANDA" appHeroUppercase />
 
-        @if (form.controls.name.hasError('required')) {
-          <mat-error>El nombre es obligatorio.</mat-error>
-        } @else if (form.controls.name.hasError('minlength')) {
-          <mat-error>El nombre debe tener al menos 3 caracteres.</mat-error>
+          @if (form.controls.name.hasError('required')) {
+            <mat-error>El nombre es obligatorio.</mat-error>
+          } @else if (form.controls.name.hasError('minlength')) {
+            <mat-error>El nombre debe tener al menos 3 caracteres.</mat-error>
+          } @else if (form.controls.name.hasError('nameDuplicated')) {
+            <mat-error>Ya existe un héroe con ese nombre.</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="w-full">
+          <mat-label>Nombre real</mat-label>
+
+          <input matInput formControlName="realName" placeholder="Peter Parker" />
+
+          @if (form.controls.realName.hasError('required')) {
+            <mat-error>El nombre real es obligatorio.</mat-error>
+          } @else if (form.controls.realName.hasError('minlength')) {
+            <mat-error>El nombre real debe tener al menos 3 caracteres.</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="w-full">
+          <mat-label>Imagen</mat-label>
+
+          <input
+            matInput
+            type="url"
+            formControlName="imageUrl"
+            placeholder="https://example.com/hero.jpg"
+          />
+
+          @if (form.controls.imageUrl.hasError('required')) {
+            <mat-error>La imagen es obligatoria.</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="w-full">
+          <mat-label>Link</mat-label>
+          <input
+            matInput
+            type="url"
+            formControlName="link"
+            placeholder="https://example.com/hero"
+          />
+        </mat-form-field>
+
+        @if (facade.submitError()) {
+          <p class="text-sm font-medium text-red-700" role="alert">
+            {{ facade.submitError() }}
+          </p>
         }
-      </mat-form-field>
-
-      <mat-form-field appearance="outline" class="w-full">
-        <mat-label>Nombre real</mat-label>
-
-        <input matInput formControlName="realName" placeholder="Peter Parker" />
-
-        @if (form.controls.realName.hasError('required')) {
-          <mat-error>El nombre real es obligatorio.</mat-error>
-        } @else if (form.controls.realName.hasError('minlength')) {
-          <mat-error>El nombre real debe tener al menos 3 caracteres.</mat-error>
-        }
-      </mat-form-field>
-
-      <mat-form-field appearance="outline" class="w-full">
-        <mat-label>Imagen</mat-label>
-
-        <input
-          matInput
-          type="url"
-          formControlName="imageUrl"
-          placeholder="https://example.com/hero.jpg"
-        />
-
-        @if (form.controls.imageUrl.hasError('required')) {
-          <mat-error>La imagen es obligatoria.</mat-error>
-        }
-      </mat-form-field>
-
-      <mat-form-field appearance="outline" class="w-full">
-        <mat-label>Link</mat-label>
-        <input matInput type="url" formControlName="link" placeholder="https://example.com/hero" />
-      </mat-form-field>
-
-      @if (facade.submitError()) {
-        <p class="text-sm font-medium text-red-700" role="alert">
-          {{ facade.submitError() }}
-        </p>
-      }
       </div>
 
       <div class="flex flex-col-reverse sm:flex-row sm:justify-end gap-3 pt-5">

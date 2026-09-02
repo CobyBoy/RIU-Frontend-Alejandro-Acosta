@@ -1,11 +1,12 @@
 import { ChangeDetectionStrategy, Component, effect, inject, input } from '@angular/core';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { AsyncValidatorFn, FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { CreateHero } from '../../models/hero.model';
 import { HeroFormFacade } from '../../services/hero-form.facade';
 import { HeroUppercaseDirective } from '../../../../shared/directives/hero-uppercase.directive';
+import { map, of } from 'rxjs';
 
 @Component({
   selector: 'app-hero-form',
@@ -25,11 +26,30 @@ export class HeroForm {
   readonly facade = inject(HeroFormFacade);
   readonly id = input<string>();
 
+  private readonly _uniqueNameValidator: AsyncValidatorFn = (control) => {
+    const heroName = (control.value as string).trim();
+
+    if (heroName.length < 3) {
+      return of(null);
+    }
+
+    return this.facade
+      .isNameTaken(heroName, this.id())
+      .pipe(map((isTaken) => (isTaken ? { nameDuplicated: true } : null)));
+  };
+
   readonly form = this._formBuilder.nonNullable.group({
-    name: ['', [Validators.required, Validators.minLength(3)]],
+    name: [
+      '',
+      {
+        validators: [Validators.required, Validators.minLength(3)],
+        asyncValidators: [this._uniqueNameValidator],
+        updateOn: 'blur',
+      },
+    ],
     realName: ['', [Validators.required, Validators.minLength(3)]],
     imageUrl: ['', [Validators.required]],
-    link: ['']
+    link: [''],
   });
 
   constructor() {
@@ -52,7 +72,7 @@ export class HeroForm {
   }
 
   onSubmit(): void {
-    if (this.form.invalid) {
+    if (this.form.invalid || this.form.pending) {
       this.form.markAllAsTouched();
       return;
     }

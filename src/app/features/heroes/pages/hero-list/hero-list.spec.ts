@@ -249,6 +249,20 @@ describe('HeroList', () => {
       expect(deleteMock).toHaveBeenCalledTimes(2);
       expect(component.deleting()).toBe(true);
     });
+
+    it('should not handle a pending deletion after destruction', () => {
+      const hero = HEROES_MOCK[0];
+      component.onDeleteRequested(hero);
+      dialogResultSubject.next(true);
+      const refreshBeforeDestroy = component.refresh();
+
+      fixture.destroy();
+      deleteSubject.next();
+      deleteSubject.complete();
+
+      expect(component.refresh()).toBe(refreshBeforeDestroy);
+      expect(snackBarOpenMock).not.toHaveBeenCalled();
+    });
   });
 
   describe('search', () => {
@@ -357,7 +371,7 @@ describe('HeroList', () => {
       id: String(index + 1),
       name: `Hero ${index + 1}`,
     }));
-    
+
     it('should paginate heroes', () => {
       heroesSubject.next(PAGINATION_HEROES);
       fixture.detectChanges();

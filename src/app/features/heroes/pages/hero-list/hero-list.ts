@@ -1,6 +1,6 @@
-import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signal } from '@angular/core';
 import { HeroService } from '../../services/hero.service';
-import { toObservable, toSignal } from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed, toObservable, toSignal } from '@angular/core/rxjs-interop';
 import {
   catchError,
   combineLatest,
@@ -48,6 +48,7 @@ export class HeroList {
   private readonly _router = inject(Router);
   private readonly _dialog = inject(MatDialog);
   private readonly _snackBar = inject(MatSnackBar);
+  private readonly _destroyRef = inject(DestroyRef);
 
   readonly query = signal('');
   readonly page = signal(0);
@@ -128,6 +129,7 @@ export class HeroList {
           this.deleting.set(true);
           return this._heroService.delete(hero.id).pipe(finalize(() => this.deleting.set(false)));
         }),
+        takeUntilDestroyed(this._destroyRef)
       )
       .subscribe({
         next: () => {

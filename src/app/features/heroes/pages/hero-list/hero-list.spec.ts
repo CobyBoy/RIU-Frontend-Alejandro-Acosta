@@ -167,25 +167,9 @@ describe('HeroList', () => {
       dialogResultSubject.next(true);
 
       expect(deleteMock).toHaveBeenCalledExactlyOnceWith(hero.id);
-      expect(component.deleting()).toBe(true);
 
       deleteSubject.next();
       deleteSubject.complete();
-
-      expect(component.deleting()).toBe(false);
-    });
-
-    it('should set deleting while the delete request is pending', () => {
-      component.onDeleteRequested(HEROES_MOCK[0]);
-
-      dialogResultSubject.next(true);
-
-      expect(component.deleting()).toBe(true);
-
-      deleteSubject.next();
-      deleteSubject.complete();
-
-      expect(component.deleting()).toBe(false);
     });
 
     it('should reload heroes after deleting successfully', () => {
@@ -220,7 +204,6 @@ describe('HeroList', () => {
 
       fixture.detectChanges();
 
-      expect(component.deleting()).toBe(false);
       expect(snackBarOpenMock).toHaveBeenCalledExactlyOnceWith(
         HERO_FEEDBACK.deleteFailed,
         undefined,
@@ -247,7 +230,6 @@ describe('HeroList', () => {
       dialogResultSubject.next(true);
 
       expect(deleteMock).toHaveBeenCalledTimes(2);
-      expect(component.deleting()).toBe(true);
     });
 
     it('should not handle a pending deletion after destruction', () => {

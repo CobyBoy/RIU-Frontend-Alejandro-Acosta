@@ -68,8 +68,6 @@ export class HeroList {
   readonly totalHeroes = computed(() => this.heroes().length);
   readonly refresh = signal(false);
 
-  readonly deleting = signal(false);
-
   private readonly _refresh$ = toObservable(this.refresh);
   private readonly _query$ = toObservable(this.query).pipe(
     map((query) => query.trim()),
@@ -126,8 +124,7 @@ export class HeroList {
       .pipe(
         filter((confirmed) => confirmed),
         switchMap(() => {
-          this.deleting.set(true);
-          return this._heroService.delete(hero.id).pipe(finalize(() => this.deleting.set(false)));
+          return this._heroService.delete(hero.id);
         }),
         takeUntilDestroyed(this._destroyRef)
       )

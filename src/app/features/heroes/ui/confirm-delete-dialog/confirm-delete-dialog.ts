@@ -7,7 +7,6 @@ import { MatButtonModule } from '@angular/material/button';
   selector: 'app-confirm-delete-dialog',
   imports: [MatButtonModule, MatDialogModule],
   templateUrl: './confirm-delete-dialog.html',
-  styleUrl: './confirm-delete-dialog.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ConfirmDeleteDialog {

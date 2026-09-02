@@ -31,6 +31,14 @@ describe('HeroCard', () => {
     expect(emitSpy).toHaveBeenCalledExactlyOnceWith(HEROES_MOCK[0].id);
   });
 
+  it('should emit the hero when delete is requested', () => {
+    const emitSpy = vi.spyOn(component.deleteRequested, 'emit');
+
+    component.onDelete();
+
+    expect(emitSpy).toHaveBeenCalledExactlyOnceWith(HEROES_MOCK[0]);
+  });
+
   describe('ui', () => {
     it('should emit editRequested when edit button is clicked', () => {
       const emitSpy = vi.spyOn(component.editRequested, 'emit');

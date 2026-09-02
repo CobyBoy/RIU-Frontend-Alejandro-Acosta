@@ -19,8 +19,8 @@ export class HeroUppercaseDirective implements ControlValueAccessor {
   private readonly _renderer = inject(Renderer2);
   private readonly _elementRef = inject(ElementRef<HTMLInputElement>);
 
-  private onChange?: (value: string) => void;
-  private onTouched?: () => void;
+  private _onChange?: (value: string) => void;
+  private _onTouched?: () => void;
 
   writeValue(value: string | null): void {
     const uppercaseValue = value?.toUpperCase() ?? '';
@@ -28,10 +28,10 @@ export class HeroUppercaseDirective implements ControlValueAccessor {
     this._renderer.setProperty(this._elementRef.nativeElement, 'value', uppercaseValue);
   }
   registerOnChange(fn: (value: string) => void): void {
-    this.onChange = fn;
+    this._onChange = fn;
   }
   registerOnTouched(fn: () => void): void {
-    this.onTouched = fn;
+    this._onTouched = fn;
   }
   setDisabledState?(isDisabled: boolean): void {
     this._renderer.setProperty(this._elementRef.nativeElement, 'disabled', isDisabled);
@@ -48,10 +48,10 @@ export class HeroUppercaseDirective implements ControlValueAccessor {
     if (selectionStart !== null && selectionEnd !== null) {
       input.setSelectionRange(selectionStart, selectionEnd, selectionDirection ?? undefined);
     }
-    this.onChange?.(uppercaseValue);
+    this._onChange?.(uppercaseValue);
   }
 
   onBlur(): void {
-    this.onTouched?.();
+    this._onTouched?.();
   }
 }

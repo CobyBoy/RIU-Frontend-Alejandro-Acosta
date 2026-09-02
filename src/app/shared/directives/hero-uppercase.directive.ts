@@ -40,8 +40,15 @@ export class HeroUppercaseDirective implements ControlValueAccessor {
 
   onInput(event: Event): void {
     const input = event.target as HTMLInputElement;
+    const selectionStart = input.selectionStart;
+    const selectionEnd = input.selectionEnd;
+    const selectionDirection = input.selectionDirection;
     const uppercaseValue = input.value.toUpperCase();
+
     this._renderer.setProperty(input, 'value', uppercaseValue);
+    if (selectionStart !== null && selectionEnd !== null) {
+      input.setSelectionRange(selectionStart, selectionEnd, selectionDirection ?? undefined);
+    }
     this.onChange(uppercaseValue);
   }
 

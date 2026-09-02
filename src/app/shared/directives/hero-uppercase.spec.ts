@@ -69,4 +69,16 @@ describe('HeroUppercase', () => {
 
     expect(input.value).toBe('');
   });
+
+  it('should maintain cursor position after transforming to uppercase', () => {
+    input.value = 'SPIDER-x-MAN';
+    input.setSelectionRange(9, 9);
+
+    input.dispatchEvent(new Event('input'));
+
+    expect(input.value).toBe('SPIDER-X-MAN');
+    expect(component.control.value).toBe('SPIDER-X-MAN');
+    expect(input.selectionStart).toBe(9);
+    expect(input.selectionEnd).toBe(9);
+  });
 });

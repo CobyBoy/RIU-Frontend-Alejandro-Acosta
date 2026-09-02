@@ -14,4 +14,5 @@ export class HeroCardStub {
 
   readonly editRequested = output<string>();
   readonly deleteRequested = output<Hero>();
+  readonly priority = input(false);
 }

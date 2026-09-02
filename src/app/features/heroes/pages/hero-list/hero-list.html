@@ -52,9 +52,10 @@
     </div>
 
     <div class="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-4" data-testid="heroes-grid">
-      @for (hero of pagedHeroes(); track hero.id) {
+      @for (hero of pagedHeroes(); track hero.id; let first = $first) {
         <app-hero-card
           [hero]="hero"
+          [priority]="first"
           (editRequested)="onEditRequested($event)"
           (deleteRequested)="onDeleteRequested($event)"
           data-testid="hero-card"
